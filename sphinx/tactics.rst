@@ -2,17 +2,23 @@
 Example 1: A subset of Coq's tactic reference
 =============================================
 
-Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scroll down for examples of ``coqtop`` output.  The bottom of the page has all Coq tactics that include repetitions, semi-automatically reverse-engineered from the manual.
+Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html.
+Scroll down for examples of ``coqtop`` output.  The bottom of the page has all
+Coq tactics that include repetitions, semi-automatically reverse-engineered from
+the manual.
 
 .. tip::
 
-   In this documentation, :n:`@italics` indicate holes to fill; the rest is fixed syntax. Boxes indicate repeatable blocks. The top-right symbol indicates the number of repetitions:
+   In this documentation, :n:`@italics` indicate holes to fill; the rest is
+   fixed syntax. Boxes indicate repeatable blocks. The top-right symbol
+   indicates the number of repetitions:
 
    - :n:`{? 0 or 1}` (an optional block)
    - :n:`{? one or more}` (a repeatable block)
    - :n:`{* any number of times}` (an optional, repeatable block)
 
-   The bottom symbol indicates the separator to use between repeated blocks. For example,
+   The bottom symbol indicates the separator to use between repeated blocks.
+   For example,
 
    - ``rewrite H``
    - ``rewrite -> H``, and
@@ -22,30 +28,52 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
 .. tacn:: fix @ident @num
 
-   This tactic is a primitive tactic to start a proof by induction. In general, it is easier to rely on higher-level induction tactics such as the ones described in Section 8.5.2.
+   This tactic is a primitive tactic to start a proof by induction. In general,
+   it is easier to rely on higher-level induction tactics such as the ones
+   described in Section 8.5.2.
 
-   In the syntax of the tactic, the identifier ident is the name given to the induction hypothesis. The natural number ``num`` tells on which premise of the current goal the induction acts, starting from 1 and counting both dependent and non dependent products. Especially, the current lemma must be composed of at least ``num`` products.
+   In the syntax of the tactic, the identifier ident is the name given to the
+   induction hypothesis. The natural number ``num`` tells on which premise of
+   the current goal the induction acts, starting from 1 and counting both
+   dependent and non dependent products. Especially, the current lemma must be
+   composed of at least ``num`` products.
 
-   Like in a ``fix`` expression, the induction hypotheses have to be used on structurally smaller arguments. The verification that inductive proof arguments are correct is done only at the time of registering the lemma in the environment. To know if the use of induction hypotheses is correct at some time of the interactive development of a proof, use the command Guarded (see Section 7.3.2).
+   Like in a ``fix`` expression, the induction hypotheses have to be used on
+   structurally smaller arguments. The verification that inductive proof
+   arguments are correct is done only at the time of registering the lemma in
+   the environment. To know if the use of induction hypotheses is correct at
+   some time of the interactive development of a proof, use the command Guarded
+   (see Section 7.3.2).
 
    .. variant:: fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
 
-    This starts a proof by mutual induction. The statements to be simultaneously proved are each of the type :n:`forall {+ @binder}, @type`. The identifiers ``ident`` are the names of the induction hypotheses. The identifiers ``ident'`` are the respective names of the premises on which the induction is performed in the statements to be simultaneously proved (if not given, the system tries to guess itself what they are).
+    This starts a proof by mutual induction. The statements to be simultaneously
+    proved are each of the type :n:`forall {+ @binder}, @type`. The identifiers
+    ``ident`` are the names of the induction hypotheses. The identifiers
+    ``ident'`` are the respective names of the premises on which the induction
+    is performed in the statements to be simultaneously proved (if not given,
+    the system tries to guess itself what they are).
 
 
 .. tacn:: unfold @qualid
 
-   This tactic applies to any goal. The argument qualid must denote a defined transparent constant or local definition (see Sections 1.3.2 and 6.10.2). The tactic unfold applies the δ rule to each occurrence of the constant to which qualid refers in the current goal and then replaces it with its βι-normal form.
+   This tactic applies to any goal. The argument qualid must denote a defined
+   transparent constant or local definition (see Sections 1.3.2 and 6.10.2). The
+   tactic unfold applies the δ rule to each occurrence of the constant to which
+   qualid refers in the current goal and then replaces it with its βι-normal
+   form.
 
    .. exn:: @qualid does not denote an evaluable constant
 
    .. variant:: unfold {+ @qualid}
 
-      Replaces simultaneously each of the ``qualid`` with their definitions and replaces the current goal with its βι normal form.
+      Replaces simultaneously each of the ``qualid`` with their definitions and
+      replaces the current goal with its βι normal form.
 
    .. variant:: unfold {+, @qualid at {+, @num}}
 
-      The lists of ``num`` specify the occurrences of ``qualid`` to be unfolded. Occurrences are located from left to right.
+      The lists of ``num`` specify the occurrences of ``qualid`` to be
+      unfolded. Occurrences are located from left to right.
 
       .. exn:: bad occurrence number of @qualid
 
@@ -53,15 +81,20 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
    .. variant:: unfold @string
 
-      If string denotes the discriminating symbol of a notation (e.g. "+") or an expression defining a notation (e.g. "_ + _"), and this notation refers to an unfoldable constant, then the tactic unfolds it.
+      If string denotes the discriminating symbol of a notation (e.g. ``"+"``)
+      or an expression defining a notation (e.g. ``"_ + _"``), and this notation
+      refers to an unfoldable constant, then the tactic unfolds it.
 
    .. variant:: unfold @string%@key
 
-      This is variant of unfold string where string gets its interpretation from the scope bound to the delimiting key key instead of its default interpretation (see Section 12.2.2).
+      This is variant of unfold string where string gets its interpretation from
+      the scope bound to the delimiting key key instead of its default
+      interpretation (see Section 12.2.2).
 
    .. variant:: unfold {+, @qualid|@string at {+, @num}}
 
-      This is the most general form, where qualid_or_string is either a qualid or a string referring to a notation.
+      This is the most general form, where ``qualid_or_string`` is either a
+      ``qualid`` or a ``string`` referring to a notation.
 
 .. tacn:: apply @term in @ident
 
@@ -133,35 +166,66 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
 .. tacn:: apply @term
 
-   This tactic applies to any goal. The argument ``term`` is a term well-formed in the local context. The tactic ``apply`` tries to match the current goal against the conclusion of the type of ``term``. If it succeeds, then the tactic returns as many subgoals as the number of non-dependent premises of the type of term. If the conclusion of the type of term does not match the goal and the conclusion is an inductive type isomorphic to a tuple type, then each component of the tuple is recursively matched to the goal in the left-to-right order.
+   This tactic applies to any goal. The argument ``term`` is a term well-formed
+   in the local context. The tactic ``apply`` tries to match the current goal
+   against the conclusion of the type of ``term``. If it succeeds, then the
+   tactic returns as many subgoals as the number of non-dependent premises of
+   the type of term. If the conclusion of the type of term does not match the
+   goal and the conclusion is an inductive type isomorphic to a tuple type, then
+   each component of the tuple is recursively matched to the goal in the
+   left-to-right order.
 
-   The tactic apply relies on first-order unification with dependent types unless the conclusion of the type of term is of the form :g:`(P t1 … tn)` with :g:`P` to be instantiated. In the latter case, the behavior depends on the form of the goal. If the goal is of the form :g:`(fun x => Q) u1 … un` and the :g:`ti` and :g:`ui` unifies, then P is taken to be :g:`(fun x => Q)`. Otherwise, ``apply`` tries to define :g:`P` by abstracting over :g:`t1 … tn` in the goal. See ``pattern`` in Section 8.7.7 to transform the goal so that it gets the form :g:`(fun x => Q) u1 … un`.
+   The tactic apply relies on first-order unification with dependent types
+   unless the conclusion of the type of term is of the form :g:`(P t1 … tn)`
+   with :g:`P` to be instantiated. In the latter case, the behavior depends on
+   the form of the goal. If the goal is of the form :g:`(fun x => Q) u1 … un`
+   and the :g:`ti` and :g:`ui` unifies, then P is taken to be :g:`(fun x => Q)`.
+   Otherwise, ``apply`` tries to define :g:`P` by abstracting over :g:`t1 …  tn`
+   in the goal. See ``pattern`` in Section 8.7.7 to transform the goal so that
+   it gets the form :g:`(fun x => Q) u1 … un`.
 
    .. exn:: Impossible to unify … with …
 
-   The apply tactic failed to match the conclusion of term and the current goal. You can help the apply tactic by transforming your goal with the change or pattern tactics (see sections 8.7.7, 8.6.5).
+   The apply tactic failed to match the conclusion of term and the current
+   goal. You can help the apply tactic by transforming your goal with the change
+   or pattern tactics (see sections 8.7.7, 8.6.5).
 
    .. exn:: Unable to find an instance for the variables {+ @ident}
 
-   This occurs when some instantiations of the premises of term are not deducible from the unification. This is the case, for instance, when you want to apply a transitivity property. In this case, you have to use one of the variants below.
+   This occurs when some instantiations of the premises of term are not
+   deducible from the unification. This is the case, for instance, when you want
+   to apply a transitivity property. In this case, you have to use one of the
+   variants below.
 
    .. variant:: apply @term with {+ @term}
 
-      Provides apply with explicit instantiations for all dependent premises of the type of term that do not occur in the conclusion and consequently cannot be found by unification. Notice that the collection :n:`{+ @term}` must be given according to the order of these dependent premises of the type of ``term``.
+      Provides apply with explicit instantiations for all dependent premises of
+      the type of term that do not occur in the conclusion and consequently
+      cannot be found by unification. Notice that the collection :n:`{+ @term}`
+      must be given according to the order of these dependent premises of the
+      type of ``term``.
 
       .. exn:: Error message: Not the right number of missing arguments
 
    .. variant:: apply @term with {+ (@ref := @term)}
 
-      This also provides apply with values for instantiating premises. Here, variables are referred by names and non-dependent products by increasing numbers (see syntax in Section 8.1.3).
+      This also provides apply with values for instantiating premises. Here,
+      variables are referred by names and non-dependent products by increasing
+      numbers (see syntax in Section 8.1.3).
 
    .. variant:: apply {+, @term}
 
-      This is a shortcut for ``apply term1 ; [ .. | … ; [ .. | apply termn ] … ]``, i.e. for the successive applications of :g:`termi+1` on the last subgoal generated by apply :g:`termi`, starting from the application of term1.
+      This is a shortcut for ``apply term1 ; [ .. | … ; [ .. | apply termn ] … ]``,
+      i.e. for the successive applications of :g:`termi+1` on the last subgoal
+      generated by apply :g:`termi`, starting from the application of term1.
 
    .. variant:: eapply @term
 
-      The tactic eapply behaves like apply but it does not fail when no instantiations are deducible for some variables in the premises. Rather, it turns these variables into existential variables which are variables still to instantiate (see Section 2.11). The instantiation is intended to be found later in the proof.
+      The tactic eapply behaves like apply but it does not fail when no
+      instantiations are deducible for some variables in the premises. Rather,
+      it turns these variables into existential variables which are variables
+      still to instantiate (see Section 2.11). The instantiation is intended to
+      be found later in the proof.
 
       .. code::
 
@@ -171,7 +235,10 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
    .. variant:: simple apply @term
 
-      This behaves like ``apply`` but it reasons modulo conversion only on subterms that contain no variables to instantiate. For instance, the following example does not succeed because it would require the conversion of ``id ?foo`` and ``O``.
+      This behaves like ``apply`` but it reasons modulo conversion only on
+      subterms that contain no variables to instantiate. For instance, the
+      following example does not succeed because it would require the conversion
+      of ``id ?foo`` and ``O``.
 
       .. coqtop:: in reset
 
@@ -183,7 +250,10 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
          Fail simple apply H.
 
-      Because it reasons modulo a limited amount of conversion, simple apply fails quicker than apply and it is then well-suited for uses in used-defined tactics that backtrack often. Moreover, it does not traverse tuples as apply does.
+      Because it reasons modulo a limited amount of conversion, simple apply
+      fails quicker than apply and it is then well-suited for uses in
+      used-defined tactics that backtrack often. Moreover, it does not traverse
+      tuples as apply does.
 
    .. tacn:: {? simple} apply {+, @term {? with @bindings_list}} in @ident {? as @intro_pattern}
 
@@ -191,10 +261,17 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
    .. tacn:: lapply @term
 
-      This tactic applies to any goal, say :g:`G`. The argument term has to be well-formed in the current context, its type being reducible to a non-dependent product :g:`A -> B` with :g:`B` possibly containing products. Then it generates two subgoals :g:`B->G` and :g:`A`. Applying ``lapply H`` (where :g:`H` has type :g:`A->B` and :g:`B` does not start with a product) does the same as giving the sequence ``cut B. 2:apply H``. where cut is described below.
+      This tactic applies to any goal, say :g:`G`. The argument term has to be
+      well-formed in the current context, its type being reducible to a
+      non-dependent product :g:`A -> B` with :g:`B` possibly containing
+      products. Then it generates two subgoals :g:`B->G` and :g:`A`. Applying
+      ``lapply H`` (where :g:`H` has type :g:`A->B` and :g:`B` does not start
+      with a product) does the same as giving the sequence ``cut B. 2:apply
+      H``. where cut is described below.
 
-      .. warning:: When ``term`` contains more than one non dependent product the tactic ``lapply`` only takes into account the first product.
-
+      .. warning:: When ``term`` contains more than one non dependent product
+                   the tactic ``lapply`` only takes into account the first
+                   product.
 
    .. example:: Assume we have a transitive relation :g:`R` on :g:`nat`:
 
@@ -212,7 +289,8 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
          Goal R n p.
 
-      The direct application of :g:`Rtrans` with apply fails because no value for :g:`y` in :g:`Rtrans` is found by ``apply``:
+      The direct application of :g:`Rtrans` with apply fails because no value
+      for :g:`y` in :g:`Rtrans` is found by ``apply``:
 
       .. coqtop:: all
 
@@ -224,13 +302,15 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
          apply (Rtrans n m p).
 
-      Note that :g:`n` can be inferred from the goal, so the following would work too.
+      Note that :g:`n` can be inferred from the goal, so the following would
+      work too.
 
       .. coqtop:: in undo
 
          apply (Rtrans _ m).
 
-      More elegantly, apply :g:`Rtrans` with ``(y := m)`` allows only mentioning the unknown :g:`m`:
+      More elegantly, apply :g:`Rtrans` with ``(y := m)`` allows only mentioning
+      the unknown :g:`m`:
 
       .. coqtop:: in undo
 
@@ -248,7 +328,9 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
 
          apply Rtrans with (2 := Rmp).
 
-      On the opposite, one can use eapply which postpones the problem of finding :g:`m`. Then one can apply the hypotheses :g:`Rnm` and :g:`Rmp`. This instantiates the existential variable and completes the proof.
+      On the opposite, one can use eapply which postpones the problem of finding
+      :g:`m`. Then one can apply the hypotheses :g:`Rnm` and :g:`Rmp`. This
+      instantiates the existential variable and completes the proof.
 
       .. coqtop:: all
 
@@ -256,11 +338,19 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scro
          apply Rnm.
          apply Rmp.
 
-   .. note:: When the conclusion of the type of the term to apply is an inductive type isomorphic to a tuple type and apply looks recursively whether a component of the tuple matches the goal, it excludes components whose statement would result in applying an universal lemma of the form ``forall A, … -> A``. Excluding this kind of lemma can be avoided by setting the following option:
+   .. note::
+
+      When the conclusion of the type of the term to apply is an inductive type
+      isomorphic to a tuple type and apply looks recursively whether a component
+      of the tuple matches the goal, it excludes components whose statement
+      would result in applying an universal lemma of the form ``forall A, … ->
+      A``. Excluding this kind of lemma can be avoided by setting the following
+      option:
 
       .. opt:: Universal Lemma Under Conjunction
 
-         This option, which preserves compatibility with versions of Coq prior to 8.4 is also available for :n:`apply @term in @ident` (see Section FIXME).
+         This option, which preserves compatibility with versions of Coq prior
+         to 8.4 is also available for :n:`apply @term in @ident`.
 
 .. tacn:: fresh {+ @component}
 .. tacn:: fun {+ @ident} => @expr
