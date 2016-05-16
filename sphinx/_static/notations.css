@@ -1,0 +1,116 @@
+/* body { */
+/*     font-family: "Ubuntu", "Open Sans", sans-serif; */
+/*     font-size: 0.95rem; */
+/* } */
+
+/* p { */
+/*     margin: 0.2em 0; */
+/* } */
+
+.notation {
+    /* font-family: "Ubuntu Mono", "Consolas", monospace; */
+    white-space: pre-wrap;
+}
+
+.notation sup {
+    top: -0.2em;
+    line-height: 1em;
+}
+
+.notation sub {
+    bottom: -0.2em;
+    border-radius: 1rem;
+    line-height: 0.4em; /* For commas */
+}
+
+.notation sup, .notation sub {
+    background: #EAEAEA;
+    border: 1px solid #AAA;
+    color: black;
+    cursor: help;
+    display: inline-block;
+    font-size: 0.7em;
+    font-weight: bolder;
+    height: 1.2em;
+    position: absolute;
+    right: -0.6em; /* half of the width */
+    text-align: center;
+    width: 1.2em;
+}
+
+.notation .repeat {
+    background: #EAEAEA;
+    border: 1px solid #AAA;
+    display: inline-block;
+    padding-right: 0.6em; /* Space for the left half of the sub- and sup-scripts */
+    padding-left: 0.2em;
+    margin: 0.25em 0;
+}
+
+.notation .repeat-wrapper {
+    display: inline-block;
+    position: relative;
+    margin-right: 0.4em; /* Space for the right half of the sub- and sup-scripts */
+}
+
+/* p .notation > .repeat-wrapper { /\* Only for top-level boxes, and only in paragraphs (not in ‘dd’) *\/ */
+/*     margin-top: 0.4em; */
+/*     margin-bottom: 0.4em; */
+/* } */
+
+.notation .hole {
+    color: #4e9a06;
+    font-style: italic;
+}
+
+/* We can't display nested blocks otherwise */
+code, .rst-content tt, .rst-content code {
+    background: transparent !important;
+    border: none !important;
+    font-size: inherit !important;
+}
+
+dt > .property {
+    margin-right: 0.25em;
+}
+
+/* Coqtop IO */
+
+pre.coqtop {
+    white-space: normal;
+}
+
+.coqtop dd, .ansi-bg-default {
+    background: #2e3436 !important;
+}
+
+.coqtop dd, .ansi-fg-default {
+    color: #eeeeec !important;
+}
+
+.coqtop dt {                    /* Questions */
+    background: none !important;
+    color: #333 !important;
+    font-weight: normal !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.coqtop dd {                    /* Responses */
+    padding: 0.5em;
+    margin-left: 0 !important;
+    margin-top: 1em !important;
+}
+
+.coqtop dl {
+    margin: 12px; /* Copied from RTD theme */
+}
+
+.coqtop dt, .coqtop dd {
+    border: none !important;
+    display: block !important;
+    font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace !important;; /* Copied from RTD theme */
+    font-size: 12px !important;; /* Copied from RTD theme */
+    line-height: 1.5 !important;; /* Copied from RTD theme */
+    white-space: pre;
+}

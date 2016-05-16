@@ -1,0 +1,1009 @@
+abstract @expr
+abstract @expr using @ident
+appcontext @ident [@cpattern]
+context @ident [@cpattern]
+context @ident [@expr]
+do @num @expr
+eval @redexpr in @term
+exactly_once @expr
+guard @test
+numgoals
+once @expr
+progress @expr
+repeat @expr
+timeout @num @expr
+time @string @expr
+try @expr
+tryif @expr then @expr else @expr
+type of @term
+type_term @term
+uconstr : @term
+fresh {+ @component}
+fun {+ @ident} => @expr
+solve [{+| @expr}]
+discrR
+split_Rabs
+split_Rmult
+exact @term
+eexact @term
+assumption
+eassumption
+refine @term
+simple refine @term
+apply @term
+eapply @term
+simple apply @term
+lapply @term
+apply @term with {+ @term}
+apply @term with {+ (@ref := @term)}
+apply {+, @term}
+apply @term in @ident
+simple apply @term in @ident
+apply {+, @term} in @ident
+apply {+, @term with @bindings_list} in @ident
+eapply {+, @term with @bindings_list} in @ident
+apply {+, @term with @bindings_list} in @ident as @intro_pattern
+eapply {+, @term with @bindings_list} in @ident as @intro_pattern
+{? simple} apply {+, @term {? with @bindings_list}} in @ident {? as @intro_pattern}
+constructor @num
+constructor
+constructor @num with @bindings_list
+constructor @tactic
+split
+exists @bindings_list
+left
+right
+left with @bindings_list
+right with @bindings_list
+split with @bindings_list
+econstructor
+eexists
+esplit
+eleft
+eright
+exists {+, @bindings_list}
+intro
+intros
+intro @ident
+intros until @ident
+intros until @num
+intro after @ident
+intro before @ident
+intro at top
+intro at bottom
+intro @ident after @ident
+intro @ident before @ident
+intro @ident at top
+intro @ident at bottom
+intros {+ @ident}
+intros @intro_pattern_list
+clear @ident
+clearbody @ident
+clear
+clear dependent @ident
+clear {+ @ident}
+clear - {+ @ident}
+revert dependent @ident
+revert {+ @ident}
+move @ident after @ident
+move @ident before @ident
+move @ident at top
+move @ident at bottom
+rename @ident into @ident
+rename {+, @ident into @ident}
+set (@ident := @term)
+set (@ident := @term) in @goal_occurrences
+set @term
+set @term in @goal_occurrences
+remember @term as @ident
+remember @term
+remember @term as @ident eqn:@ident
+remember @term as @ident in @goal_occurrences
+pose (@ident := @term)
+pose @term
+set (@ident {+ @binder} := @term)
+set (@ident {+ @binder} := @term) in @goal_occurrences
+pose (@ident {+ @binder} := @term)
+decompose sum @term
+decompose record @term
+decompose [{+ @qualid}] @term
+assert (@ident : @form)
+assert @form
+assert @form by @tactic
+assert @form as @intro_pattern
+assert @form as @intro_pattern by @tactic
+assert (@ident := @term)
+pose proof @term as @intro_pattern
+enough (@ident : @form)
+enough @form
+enough @form as @intro_pattern
+enough (@ident : @form) by @tactic
+enough @form by @tactic
+enough @form as @intro_pattern by @tactic
+cut @form
+specialize @ident with @bindings_list
+specialize (@ident {+ @term})
+generalize @term
+generalize @term as @ident
+generalize dependent @term
+generalize {+, @term}
+generalize @term at {+ @num}
+generalize {+, @term at {+ @num} as @ident}
+evar (@ident : @term)
+instantiate (@num := @term)
+instantiate (@num := @term) in @ident
+instantiate (@num := @term) in (Value of @ident)
+instantiate (@num := @term) in (Type of @ident)
+instantiate
+admit
+absurd @term
+contradiction
+contradiction @ident
+contradict @ident
+exfalso
+destruct @term
+destruct @term as @disj_conj_intro_pattern
+destruct @term eqn:@naming_intro_pattern
+destruct @term with @bindings_list
+edestruct @term
+destruct @term using @term
+destruct @term using @term with @bindings_list
+destruct @term in @goal_occurrences
+destruct @term with @bindings_list as @disj_conj_intro_pattern eqn:@naming_intro_pattern using @term with @bindings_list in @goal_occurrences
+edestruct @term with @bindings_list as @disj_conj_intro_pattern eqn:@naming_intro_pattern using @term with @bindings_list in @goal_occurrences
+case @term
+case @term with @bindings_list
+ecase @term
+ecase @term with @bindings_list
+simple destruct @ident
+simple destruct @num
+case_eq @term
+destruct {+, @term}
+induction @term
+induction @term as @disj_conj_intro_pattern
+induction @term with @bindings_list
+einduction @term
+induction @term using @term
+induction @term using @term with @bindings_list
+induction @term in @goal_occurrences
+induction @term with @bindings_list as @disj_conj_intro_pattern using @term with @bindings_list in @goal_occurrences
+einduction @term with @bindings_list as @disj_conj_intro_pattern using @term with @bindings_list in @goal_occurrences
+elim @term
+elim @term with @bindings_list
+eelim @term
+elim @term using @term
+elim @term using @term with @bindings_list
+elim @term with @bindings_list using @term with @bindings_list
+eelim @term with @bindings_list using @term with @bindings_list
+elimtype @form
+simple induction @ident
+simple induction @num
+induction {+, @term} using @qualid
+double induction @ident @ident
+double induction @num @num
+dependent induction @ident
+dependent destruction @ident
+dependent induction @ident generalizing {+ @ident}
+functional induction (@qualid {+ @term})
+functional induction (@qualid {+ @term}) as @disj_conj_intro_pattern using @term with @bindings_list
+discriminate @term
+discriminate @num
+discriminate @term with @bindings_list
+ediscriminate @num
+discriminate
+ediscriminate @term {? with @bindings_list}
+injection @term
+injection @num
+injection @term with @bindings_list
+einjection @num
+injection
+einjection @term {? with @bindings_list}
+injection @term {? with @bindings_list} as {+ @intro_pattern}
+injection @num as {+ @intro_pattern}
+injection as {+ @intro_pattern}
+einjection @term {? with @bindings_list} as {+ @intro_pattern}
+einjection @num as {+ @intro_pattern}
+einjection as {+ @intro_pattern}
+inversion @ident
+inversion @num
+inversion_clear @ident
+inversion @ident as @intro_pattern
+inversion @num as @intro_pattern
+inversion_clear @ident as @intro_pattern
+dependent inversion @ident
+dependent inversion @ident as @intro_pattern
+dependent inversion_clear @ident
+dependent inversion_clear @ident as @intro_pattern
+dependent inversion @ident with @term
+dependent inversion @ident as @intro_pattern with @term
+dependent inversion_clear @ident with @term
+dependent inversion_clear @ident as @intro_pattern with @term
+simple inversion @ident
+simple inversion @ident as @intro_pattern
+inversion @ident using @ident'
+inversion @ident in {+ @ident}
+inversion @ident as @intro_pattern in {+ @ident}
+inversion_clear @ident in {+ @ident}
+inversion_clear @ident as @intro_pattern in {+ @ident}
+inversion @ident using @ident' in {+ @ident}
+fix @ident @num
+fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
+cofix @ident
+cofix @ident with {+ (@ident {+ @binder} : @type)}
+rewrite @term
+rewrite -> @term
+rewrite <- @term
+rewrite @term in @clause
+rewrite @term at @occurrences
+rewrite @term by @tactic
+erewrite @term
+rewrite {+, @term}
+replace @term with @term
+replace @term with @term by @tactic
+replace @term
+replace -> @term
+replace <- @term
+replace @term with @term in @clause
+replace @term with @term in @clause by @tactic
+replace @term in @clause
+replace -> @term in @clause
+replace <- @term in @clause
+cutrewrite <- (@term = @term)
+cutrewrite -> (@term = @term)
+subst @ident
+subst {+ @ident}
+stepl @term
+stepl @term by @tactic
+stepr @term
+stepr @term by @tactic
+change @term
+change @term with @term
+change @term in @ident
+change @term with @term in @ident
+change @term at {+ @num} with @term
+change @term at {+ @num} with @term in @ident
+compute
+cbv
+lazy
+vm_compute
+native_compute
+cbv {+ @flag}
+lazy {+ @flag}
+compute [{+ @qualid}]
+cbv [{+ @qualid}]
+compute -[{+ @qualid}]
+cbv -[{+ @qualid}]
+lazy [{+ @qualid}]
+lazy -[{+ @qualid}]
+red
+hnf
+cbn
+simpl
+simpl @pattern
+simpl @qualid
+simpl @string
+cbn [{+ @qualid}]
+cbn -[{+ @qualid}]
+simpl @pattern at {+ @num}
+simpl @qualid at {+ @num}
+simpl @string at {+ @num}
+unfold @qualid
+unfold @string
+unfold @string%@key
+unfold {+, @qualid}
+unfold {+, @qualid at {+, @num}}
+unfold {+, @qualid_or_string at {+, @num}}
+fold @term
+fold
+pattern @term
+pattern
+pattern @term at {+ @num}
+pattern @term at - {+ @num}
+pattern {+, @term}
+pattern {+, @term at {+ @num}}
+auto
+auto @num
+auto with *
+trivial
+trivial with *
+auto with {+ @ident}
+auto using {+, @lemma}
+auto using {+, @lemma} with {+ @ident}
+trivial with {+ @ident}
+eauto
+autounfold with *
+autounfold with {+ @ident}
+autounfold with {+ @ident} in @clause
+autorewrite with {+ @ident}
+autorewrite with {+ @ident} using @tactic
+autorewrite with {+ @ident} in @qualid
+autorewrite with {+ @ident} in @qualid using @tactic
+autorewrite with {+ @ident} in @clause
+tauto
+intuition @tactic
+intuition
+dintuition
+rtauto
+firstorder
+firstorder @tactic
+firstorder with {+ @ident}
+firstorder using {+, @qualid}
+firstorder using {+, @qualid} with {+ @ident}
+congruence
+congruence @n
+congruence with {+ @term}
+constr_eq @term @term
+unify @term @term
+unify @term @term with @ident
+is_evar @term
+has_evar @term
+is_var @term
+f_equal
+reflexivity
+symmetry
+symmetry in @ident
+transitivity @term
+decide equality
+compare @term @term
+simplify_eq @term
+simplify_eq @num
+simplify_eq
+esimplify_eq @num
+esimplify_eq @term {? with @bindings_list}
+dependent rewrite -> @ident
+dependent rewrite <- @ident
+functional inversion @ident
+functional inversion @num
+functional inversion @ident @qualid
+quote @ident
+quote @ident [{+ @ident}]
+classical_left
+classical_right
+btauto
+omega
+ring
+ring_simplify {+ @term}
+field
+field_simplify_eq
+field_simplify {+ @term}
+fourier
+cycle @num
+swap @num @num
+revgoals
+shelve
+shelve_unifiable
+give_up
+idtac
+fail
+fail @n
+gfail
+idtac {+ @message_token}
+fail {+ @message_token}
+fail @n {+ @message_token}
+gfail {+ @message_token}
+gfail @n {+ @message_token}
+specialize_eqs
+quote @ident in @term using @tactic
+quote @ident [{+ @ident}] in @term using @tactic
+psatz
+lra
+lia
+nia
+ring_simplify
+ring [{+ @term}]
+ring_simplify [{+ @term}] {+ @t} in @ident
+field_simplify
+field_simplify in @hyp
+field_simplify_eq in @hyp
+field [{+ @term}]
+field_simplify [{+ @term}]
+field_simplify [{+ @term}] {+ @term}
+field_simplify [{+ @term}] in @hyp
+field_simplify [{+ @term}] {+ @term} in @hyp
+field_simplify_eq [{+ @term}]
+field_simplify_eq [{+ @term}] in @hyp
+nsatz
+nsatz with radicalmax:=@num%N strategy:=@num%Z parameters:=@list of vars variables:=@list of vars
+setoid_reflexivity
+setoid_transitivity
+setoid_replace @term with @term
+setoid_symmetry {? in @ident}
+setoid_rewrite @term {? in @ident}
+setoid_rewrite <- @term {? in @ident}
+setoid_rewrite <- @term {? at @occs} {? in @ident}
+setoid_rewrite {? @orientation} @term {? at @occs} {? in @ident}
+setoid_replace @term with @term {? in @ident} {? using relation @term} {? by @tactic}
+rewrite_strat @s {? in @ident}
+Abort.
+Abort All.
+Abort @ident.
+About @qualid.
+Add LoadPath "@string".
+Add LoadPath "@string" as @dirpath.
+Add ML Path "@string".
+Add Printing Coercion @qualid.
+Add Printing Constructor @ident.
+Add Printing If @ident.
+Add Printing Let @ident.
+Add Printing Record @ident.
+Add Rec LoadPath "@string".
+Add Rec LoadPath "@string" as @dirpath.
+Add Rec ML Path "@string".
+Add Search Blacklist "@string".
+Admitted.
+Arguments @qualid : clear implicits.
+Arguments @qualid : clear scopes.
+Arguments @qualid : default implicits.
+@assumption_keyword Inline @assums.
+Axiom @ident : @term.
+Back.
+Back @n.
+BackTo @num.
+Backtrack @num @num @num.
+Bind Scope @scope with @qualid.
+Canonical Structure @ident.
+Canonical Structure @ident := @term.
+Canonical Structure @ident := @term : @type.
+Canonical Structure @ident : @type := @term.
+Canonical Structure @qualid.
+Cd.
+Cd "@string".
+Check @term.
+Close Scope @scope.
+Coercion @ident := @term.
+Coercion @ident := @term : @type.
+Coercion @qualid : @class >-> @class.
+Compute @term.
+Conjecture @ident : @term.
+Constraint @ident @ord @ident.
+Declare Implicit Tactic @tactic.
+Declare Instance.
+Declare Module @ident @module_bindings : @module_type.
+Declare Module @ident : @module_type.
+Declare Reduction @ident := @convtactic.
+Declare Right Step @term.
+Defined.
+Definition @ident := @term.
+Definition @ident : @term := @term.
+Delimit Scope @scope with @ident.
+Derive @ident SuchThat @term As @ident.
+Drop.
+dtauto.
+End @ident.
+Eval @convtactic in @term.
+Example @ident := @term.
+Existential @num := @term.
+Existing Class @ident.
+Export @qualid.
+Extract Constant @qualid => "@string".
+Extract Inlined Constant @qualid => "@string".
+Extraction Language Haskell.
+Extraction Language Ocaml.
+Extraction Language Scheme.
+Extraction Library @ident.
+Extraction @qualid.
+Extraction @term.
+Focus.
+Focus @num.
+From @dirpath Require @qualid.
+Functional Scheme @ident := Induction for @ident' Sort @sort.
+Generalizable All Variables.
+Generalizable No Variables.
+Generalizable Variable @ident.
+Global Arguments @qualid : default implicits.
+Global Close Scope @scope.
+Global @command.
+Global Generalizable All Variables.
+Global Instance.
+Global Obligation Tactic := @expr.
+Global Open Scope @scope.
+Global Set @flag.
+Global Set @option @value.
+Global Unset @flag.
+Global Unset @option.
+Goal @form.
+Grab Existential Variables.
+Guarded.
+Hint @hint_definition.
+Hint Local @hint_definition.
+Identity Coercion @ident:@class >-> @class.
+Implicit Type @ident : @type.
+Import @qualid.
+Include @module.
+Info @num @expr.
+Inspect @num.
+Let @ident := @term.
+Let @ident : @term := @term.
+Load @ident.
+Load "@string".
+Load Verbose @ident.
+Load Verbose "@string".
+Local Arguments @qualid : default implicits.
+Local Axiom @ident : @term.
+Local Close Scope @scope.
+Local Coercion @ident := @term.
+Local Coercion @qualid : @class >-> @class.
+Local @command.
+Local Definition @ident := @term.
+Local Hint @hint_definition.
+Local Identity Coercion @ident:@ident >-> @ident.
+Local Obligation Tactic := @expr.
+Local Open Scope @scope.
+Local Set @flag.
+Local Set @option @value.
+Local SubClass @ident := @type.
+Local Unset @flag.
+Local Unset @option.
+Locate File "@string".
+Locate Library @dirpath.
+Locate Ltac @qualid.
+Locate Module @qualid.
+Locate @qualid.
+Locate "@symbol".
+Locate Term @qualid.
+Module @ident.
+Module @ident @module_bindings.
+Module @ident @module_bindings := @module_expression.
+Module @ident @module_bindings : @module_type.
+Module @ident @module_bindings : @module_type := @module_expression.
+Module @ident := @module_expression.
+Module @ident : @module_type.
+Module Type @ident.
+Module Type @ident @module_bindings.
+Module Type @ident @module_bindings := @module_type.
+Module Type @ident := @module_type.
+Monomorphic @definition.
+Open Scope @scope.
+Optimize Heap.
+Optimize Proof.
+Parameter @ident : @term.
+Polymorphic @definition.
+Print All.
+Print All Dependencies @qualid.
+Print Assumptions @qualid.
+Print Classes.
+Print Coercion Paths @class @class.
+Print Coercions.
+Print Extraction Blacklist.
+Print Extraction Inline.
+Print Fields.
+Print Firstorder Solver.
+Print Grammar constr.
+Print Grammar pattern.
+Print Grammar tactic.
+Print Graph.
+Print Hint.
+Print Hint *.
+Print HintDb @ident.
+Print Hint @ident.
+Print Implicit @qualid.
+Print Instances @typeclass.
+Print Libraries.
+Print LoadPath.
+Print LoadPath @dirpath.
+Print Ltac @qualid.
+Print ML Modules.
+Print ML Path "@string".
+Print Module @ident.
+Print Module Type @ident.
+Print Opaque Dependencies @qualid.
+Print Options.
+Print @qualid.
+Print Rewrite HintDb @ident.
+Print Rings.
+Print Scopes.
+Print Scope @scope.
+Print Section @ident.
+Print Strategies.
+Print Strategy @qualid.
+Print Table Printing If.
+Print Table Printing Let.
+Print Tables.
+Print Table @table.
+Print Term @qualid.
+Print Transparent Dependencies @qualid.
+Print Visibility.
+Print Visibility @scope.
+Program Definition @ident := @term.
+Program Definition @ident : @term := @term.
+Program Fixpoint @ident @params {order} : type := @term.
+Program Instance.
+Program Lemma @ident : type.
+Proof.
+Proof @term.
+Proof using.
+Proof using All.
+Proof using @collection *.
+Proof using @collection + @collection.
+Proof using @collection - @collection.
+Proof using Type.
+Proof using Type*.
+Proof with @tactic.
+Pwd.
+Qed.
+Qed exporting.
+Quit.
+Recursive Extraction Library @ident.
+Redirect "@file" @command.
+Remove LoadPath "@string".
+Remove Printing If @ident.
+Remove Printing Let @ident.
+Remove Search Blacklist "@string".
+Require Export @qualid.
+Require Import @qualid.
+Require @qualid.
+Reset Extraction Blacklist.
+Reset Extraction Inline.
+Reset @ident.
+Restart.
+Save.
+Save Corollary @ident.
+Save Fact @ident.
+Save @ident.
+Save Lemma @ident.
+Save Proposition @ident.
+Save Remark @ident.
+Save Theorem @ident.
+Scheme Equality for @ident.
+Scheme @ident := Induction for @ident' Sort @sort.
+Scheme @ident := Minimality for @ident' Sort @sort.
+Scheme Induction for @ident Sort @sort.
+SearchAbout @qualid.
+SearchHead @term.
+SearchPattern @term.
+Search @qualid.
+SearchRewrite @term.
+Search "@string".
+Search "@string"%@key.
+Search @term_pattern.
+Section @ident.
+@selector: Check @term.
+@selector: SearchHead @term.
+@selector: SearchPattern @term.
+@selector: SearchRewrite @term.
+Set Automatic Introduction.
+Set Boolean Equality Schemes.
+Set Bracketing Last Introduction Pattern.
+Set Bullet Behavior "None".
+Set Bullet Behavior "Strict Subproofs".
+Set Case Analysis Schemes.
+Set Contextual Implicit.
+Set Decidable Equality Schemes.
+Set Default Goal Selector.
+Set Default Goal Selector "all".
+Set Default Goal Selector "@selector".
+Set Default Proof Using "@expression".
+Set Default Timeout.
+Set Default Timeout @int.
+Set Elimination Schemes.
+Set Extraction AutoInline.
+Set Extraction Conservative Types.
+Set Extraction KeepSingleton.
+Set Extraction Optimize.
+Set Extraction SafeImplicits.
+Set Firstorder Depth @n.
+Set Firstorder Solver @tactic.
+Set @flag.
+Set Hide Obligations.
+Set Hyps Limit.
+Set Hyps Limit @num.
+Set Implicit Arguments.
+Set Info Level @num.
+Set Intuition Iff Unfolding.
+Set Intuition Negation Unfolding.
+Set Loose Hint Behavior "Lax".
+Set Loose Hint Behavior "Strict".
+Set Loose Hint Behavior "Warn".
+Set Ltac Debug.
+Set Maximal Implicit Insertion.
+Set Nonrecursive Elimination Schemes.
+Set @option.
+Set @option @value.
+Set Parsing Explicit.
+Set Primitive Projections.
+Set Printing All.
+Set Printing Coercions.
+Set Printing Depth.
+Set Printing Depth @integer.
+Set Printing Existential Instances.
+Set Printing If for @ident.
+Set Printing Implicit.
+Set Printing Implicit Defensive.
+Set Printing Let for @ident.
+Set Printing Matching.
+Set Printing Notations.
+Set Printing Primitive Projection Compatibility.
+Set Printing Primitive Projection Parameters.
+Set Printing Projections.
+Set Printing Records.
+Set Printing Synth.
+Set Printing Universes.
+Set Printing Width.
+Set Printing Width @integer.
+Set Printing Wildcard.
+Set Refine Instance Mode.
+Set Reversible Pattern Implicit.
+Set Search Output Name Only.
+Set Shrink Abstract.
+Set Shrink Obligations.
+Set Silent.
+Set Strict Implicit.
+Set Strict Universe Declaration.
+Set Strongly Strict Implicit.
+Set Suggest Proof Using.
+Set Tactic Compat Context.
+Set Transparent Obligations.
+Set Universal Lemma Under Conjunction.
+Set Universe Polymorphism.
+Show.
+Show Conjectures.
+Show Existentials.
+Show Intro.
+Show Intros.
+Show @num.
+Show Obligation Tactic.
+Show Proof.
+Show Script.
+SubClass @ident := @type.
+Test Automatic Introduction.
+Test Boolean Equality Schemes.
+Test Bracketing Last Introduction Pattern.
+Test Case Analysis Schemes.
+Test Contextual Implicit.
+Test Decidable Equality Schemes.
+Test Default Goal Selector.
+Test Default Timeout.
+Test Default Timeout @int.
+Test Elimination Schemes.
+Test Extraction AutoInline.
+Test Extraction Conservative Types.
+Test Extraction KeepSingleton.
+Test Extraction Optimize.
+Test Extraction SafeImplicits.
+Test Firstorder Depth @n.
+Test Firstorder Solver @tactic.
+Test @flag.
+Test Hide Obligations.
+Test Hyps Limit.
+Test Hyps Limit @num.
+Test Implicit Arguments.
+Test Info Level @num.
+Test Intuition Iff Unfolding.
+Test Intuition Negation Unfolding.
+Test Ltac Debug.
+Test Maximal Implicit Insertion.
+Test Nonrecursive Elimination Schemes.
+Test @option.
+Test @option @value.
+Test Parsing Explicit.
+Test Primitive Projections.
+Test Printing All.
+Test Printing Coercions.
+Test Printing Depth.
+Test Printing Depth @integer.
+Test Printing Existential Instances.
+Test Printing If for @ident.
+Test Printing Implicit.
+Test Printing Implicit Defensive.
+Test Printing Let for @ident.
+Test Printing Matching.
+Test Printing Notations.
+Test Printing Primitive Projection Compatibility.
+Test Printing Primitive Projection Parameters.
+Test Printing Projections.
+Test Printing Records.
+Test Printing Synth.
+Test Printing Universes.
+Test Printing Width.
+Test Printing Width @integer.
+Test Printing Wildcard.
+Test Refine Instance Mode.
+Test Reversible Pattern Implicit.
+Test Search Output Name Only.
+Test Shrink Abstract.
+Test Shrink Obligations.
+Test Silent.
+Test Strict Implicit.
+Test Strict Universe Declaration.
+Test Strongly Strict Implicit.
+Test Suggest Proof Using.
+Test Tactic Compat Context.
+Test Transparent Obligations.
+Test Universal Lemma Under Conjunction.
+Test Universe Polymorphism.
+Time @command.
+Timeout @int @command.
+Undelimit Scope @scope.
+Undo.
+Undo @num.
+Unfocus.
+Unfocused.
+Universe @ident.
+Unset Automatic Introduction.
+Unset Boolean Equality Schemes.
+Unset Bracketing Last Introduction Pattern.
+Unset Case Analysis Schemes.
+Unset Contextual Implicit.
+Unset Decidable Equality Schemes.
+Unset Default Goal Selector.
+Unset Default Timeout.
+Unset Default Timeout @int.
+Unset Elimination Schemes.
+Unset Extraction AutoInline.
+Unset Extraction Conservative Types.
+Unset Extraction KeepSingleton.
+Unset Extraction Optimize.
+Unset Extraction SafeImplicits.
+Unset Firstorder Depth @n.
+Unset Firstorder Solver @tactic.
+Unset @flag.
+Unset Hide Obligations.
+Unset Hyps Limit.
+Unset Hyps Limit @num.
+Unset Implicit Arguments.
+Unset Info Level @num.
+Unset Intuition Iff Unfolding.
+Unset Intuition Negation Unfolding.
+Unset Ltac Debug.
+Unset Maximal Implicit Insertion.
+Unset Nonrecursive Elimination Schemes.
+Unset @option.
+Unset @option @value.
+Unset Parsing Explicit.
+Unset Primitive Projections.
+Unset Printing All.
+Unset Printing Coercions.
+Unset Printing Depth.
+Unset Printing Depth @integer.
+Unset Printing Existential Instances.
+Unset Printing If for @ident.
+Unset Printing Implicit.
+Unset Printing Implicit Defensive.
+Unset Printing Let for @ident.
+Unset Printing Matching.
+Unset Printing Notations.
+Unset Printing Primitive Projection Compatibility.
+Unset Printing Primitive Projection Parameters.
+Unset Printing Projections.
+Unset Printing Records.
+Unset Printing Synth.
+Unset Printing Universes.
+Unset Printing Width.
+Unset Printing Width @integer.
+Unset Printing Wildcard.
+Unset Refine Instance Mode.
+Unset Reversible Pattern Implicit.
+Unset Search Output Name Only.
+Unset Shrink Abstract.
+Unset Shrink Obligations.
+Unset Silent.
+Unset Strict Implicit.
+Unset Strict Universe Declaration.
+Unset Strongly Strict Implicit.
+Unset Suggest Proof Using.
+Unset Tactic Compat Context.
+Unset Transparent Obligations.
+Unset Universal Lemma Under Conjunction.
+Unset Universe Polymorphism.
+Unshelve.
+Variable @ident : @term.
+Add Field @name : @field ({+, @mod}).
+Add Ring @name : @ring ({+, @mod}).
+Admit Obligations {? of @ident}.
+Arguments @ident {+ !@arg}.
+Arguments @ident {+ @possibly_bracketed_ident} / {+ @possibly_bracketed_ident}.
+Arguments @ident {+ @possibly_bracketed_ident} : simpl never.
+Arguments @ident {+ @possibly_bracketed_ident} : simpl nomatch.
+Arguments @qualid {+ @name} : rename.
+Arguments @qualid {+ @name %@scope}.
+Arguments @qualid {+ @possibly_bracketed_ident}.
+Class @ident {+ @binder} : @sort:= {{+; @field}}.
+Class @ident {+ @binder} : @sort:= @ident : @type.
+Collection @ident:= {+ @ident}.
+Context {+ @binder}.
+Corollary @ident {? @binders} : @type.
+Create HintDb @ident {? discriminated}.
+Definition @ident {+ @binder}.
+Definition @ident {? @binders} : @type.
+Derive Dependent Inversion_clear @ident with forall {+ @ident: @type}, @I {+ @arg} Sort @sort.
+Derive Dependent Inversion @ident with forall {+ @ident: @type}, @I {+ @arg} Sort @sort.
+Derive Inversion_clear @ident with forall {+ @ident: @type}, @I {+ @arg} Sort @sort.
+Derive Inversion @ident with forall {+ @ident: @type}, @I {+ @arg} Sort @sort.
+Existing Instance @ident {? @priority}.
+Existing Instances {+ @ident} {? @priority}.
+Extract Constant @qualid {+ "@string"} => "@string".
+Extract Inductive @qualid => "@string" [{+ "@string"}] @optstring.
+Extraction Blacklist {+ @ident}.
+Extraction "@file" {+ @qualid}.
+Extraction Implicit @qualid [{+ @ident}].
+Extraction @{Inline | NoInline} {+ @qualid}.
+Fact @ident {? @binders} : @type.
+Fixpoint @ident @params {struct @ident} : type := @term.
+Function @ident {+ @binder} {decrease_annot} : type := @term.
+Generalizable Variables {+ @ident}.
+Global Arguments @qualid {+ @name %@scope}.
+Global Arguments @qualid {+ @possibly_bracketed_ident}.
+Global Opaque {+ @qualid}.
+Hint @hint_definition : {+ @ident}.
+Hint Local @hint_definition : {+ @ident}.
+Hint Rewrite {+ @term} : {+ @ident}.
+Hint Rewrite -> {+ @term} : {+ @ident}.
+Hint Rewrite <- {+ @term} : {+ @ident}.
+Hint Rewrite {+ @term} using @tactic : {+ @ident}.
+Implicit Types {+ @ident} : @type.
+Include {+<+ @module}.
+Inductive @ident {+ @binder} : @term := {+| @ident: @term}.
+Infix "@symbol" := @qualid ({+, @modifier}).
+Instance @ident {+ @binder} : Class {+ @term} {? @priority} := {{+; @field := @b}}.
+Instance @ident {+ @binder} : forall {+ @binder}, Class {+ @term} {? @priority} := @term.
+Lemma @ident {? @binders} : @type.
+Let CoFixpoint @ident {+ with @cofix_body}.
+Let Fixpoint @ident {+ with @fix_body}.
+Let @ident {? @binders} : @type.
+Local Arguments @qualid {+ @name %@scope}.
+Local Arguments @qualid {+ @possibly_bracketed_ident}.
+Local Declare ML Module {+ "@string"}.
+{? Local} Hint Constructors @ident{? : {+ @ident}}.
+{? Local} Hint Constructors {+ @ident}{? : {+ @ident}}.
+{? Local} Hint Cut @regexp{? : {+ @ident}}.
+{? Local} Hint Extern @num {? @pattern} => @tactic{? : {+ @ident}}.
+Local Hint @hint_definition : {+ @ident}.
+{? Local} Hint @{Transparent | Opaque} {+ @ident}{? : {+ @ident}}.
+{? Local} Hint Immediate @term{? : {+ @ident}}.
+{? Local} Hint Immediate {+ @term}{? : {+ @ident}}.
+{? Local} Hint @{Transparent | Opaque} @qualid{? : {+ @ident}}.
+{? Local} Hint Resolve @term{? : {+ @ident}}.
+{? Local} Hint Resolve {+ @term}{? : {+ @ident}}.
+{? Local} Hint Unfold {+ @ident}{? : {+ @ident}}.
+{? Local} Hint Unfold @qualid{? : {+ @ident}}.
+{? Local} Notation @ident {? {+ @ident @ident}} := @term {? (only parsing)}.
+Module @{Import | Export} @ident.
+Module @ident @module_bindings := {+<+ @module_expression}.
+Module @ident @module_bindings <: {+<: @module_type}.
+Module @ident @module_bindings <: {+<: @module_type}:= @module_expression.
+Module @ident <: {+<: @module_type}.
+Module Type @ident @module_bindings := {+<+ @module_type}.
+Next Obligation {? of @ident}.
+Obligation num {? of @ident}.
+Obligations {? of @ident}.
+Opaque {+ @qualid}.
+Parameter {+ @ident} : @term.
+Preterm {? of @ident}.
+Print Instances @{Reflexive | Symmetric | Transitive | Equivalence | PreOrder | PER | Proper}.
+Print {? Sorted} Universes.
+Print {? Sorted} Universes "@string".
+Program Definition @ident {+ @binder} : @term := @term.
+Proof using @collection - ({+ @ident}).
+Proof using {+ @ident}.
+Proof using -({+ @ident}).
+Proof using {+ @ident} with @tactic.
+Proof with @tactic using {+ @ident}.
+Proposition @ident {? @binders} : @type.
+Qed exporting {+, @ident}.
+Record @ident @params : @sort := @ident {{+; @ident @binders : @term}}.
+Recursive Extraction {+ @qualid}.
+Remark @ident {? @binders} : @type.
+Remove Hints {+ @term} : {+ @ident}.
+Require {? @{Import | Export}} {+ @qualid}.
+SearchHead @term inside {+ @module}.
+SearchHead @term outside {+ @module}.
+SearchPattern @term inside {+ @module}.
+SearchPattern @term outside {+ @module}.
+SearchRewrite @term inside {+ @module}.
+SearchRewrite @term outside {+ @module}.
+Search {+ {? -}@search_term}.
+Search {+ @search_term} inside {+ @module}.
+Search {+ @search_term} outside {+ @module}.
+@selector: Search {+ {? -}@search_term}.
+Separate Extraction {+ @qualid}.
+Solve All Obligations {? with @expr}.
+Solve Obligations {? of @ident} {? with @expr}.
+Strategy @level [{+ @qualid}].
+Tactic Notation @tactic_level {? {+ @prod_item}} := @tactic.
+Theorem @ident {? @binders} : @type.
+Transparent {+ @qualid}.
+Typeclasses eauto := {? debug} {? @{dfs | bfs} @depth}.
+Typeclasses Opaque {+ @ident}.
+Typeclasses Transparent {+ @ident}.
+Variable {+ @ident} : @term.
+Variant @ident {+ @binder} : @term := {+ @constructors}.

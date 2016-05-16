@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Coq Notations</title>
+    <link rel="stylesheet" href="notations.css">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <h2>How to read this page</h2>
+    <div class="intro">
+      <p>Each line is one Coq <strong>tactic notation</strong>. <samp class="hole">Green italics</samp> indicate holes to fill; the rest is fixed syntax.</p>
+      <p>Boxes indicate <strong>repeated patterns</strong>. The top-right symbol indicates the number of repetitions: <span class="repeat-wrapper"><samp class="repeat">0 or 1</samp><sup>?</sup></span>, <span class="repeat-wrapper"><samp class="repeat">one or more</samp><sup>+</sup></span>, or <span class="repeat-wrapper"><samp class="repeat">any number of time</samp><sup>*</sup></span>. The bottom symbol indicates the separator.</p>
+      <p>For example, “<samp>rewrite H</samp>”, “<samp>rewrite -> H</samp>”, and “<samp>rewrite H1, H2</samp>” are all matches for “<samp>rewrite <span class="repeat-wrapper"><samp class="repeat">-&gt;</samp><sup>?</sup></span> <span class="repeat-wrapper"><samp class="repeat"><span class="hole">term</span></samp><sup>+</sup><sub>,</sub></span></samp>”.</p>
+      <br/>
+    </div>

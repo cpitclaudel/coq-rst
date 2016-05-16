@@ -1,0 +1,10 @@
+- Every time:
+  - Sphinx
+  - Python 3
+    - sphinx
+    - sphinx_rtd_theme
+    - pexpect
+    - dominate
+    - antlr4-python3-runtime
+- Only for pre-processing:
+  - ANTLR (parser generator)
