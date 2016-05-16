@@ -28,12 +28,12 @@ A new syntax and rendering for tactic notations with repeats
 
 The proposal is to write the patterns above like this::
 
-    pattern {+, @term at {+ @num}}
+    pattern {+, @term {? at {+ @num}}}
     fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
 
 and render them like this:
 
-:notation:`pattern {+, @term at {+ @num}}`
+:notation:`pattern {+, @term {? at {+ @num}}}`
 
 :notation:`fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}`
 
