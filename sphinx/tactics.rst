@@ -1,6 +1,8 @@
-==================
- Tactic reference
-==================
+=============================================
+Example 1: A subset of Coq's tactic reference
+=============================================
+
+Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html\ . Scroll down for examples of ``coqtop`` output.  The bottom of the page has all Coq tactics that include repetitions, semi-automatically reverse-engineered from the manual.
 
 .. tip::
 
