@@ -114,3 +114,7 @@ pre.coqtop {
     line-height: 1.5 !important;; /* Copied from RTD theme */
     white-space: pre;
 }
+
+.math-preamble {
+    display: none;
+}

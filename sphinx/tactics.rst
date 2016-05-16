@@ -2,25 +2,21 @@
  Tactic reference
 ==================
 
-Syntax
-======
+.. tip::
 
-In the following, :n:`@green @italics` indicate holes to fill; the rest is fixed syntax. Boxes indicate repeatable blocks. The top-right symbol indicates the number of repetitions:
+   In this documentation, :n:`@italics` indicate holes to fill; the rest is fixed syntax. Boxes indicate repeatable blocks. The top-right symbol indicates the number of repetitions:
 
-- :n:`{? 0 or 1}` (an optional block)
-- :n:`{? one or more}` (a repeatable block)
-- :n:`{* any number of times}` (an optional, repeatable block)
+   - :n:`{? 0 or 1}` (an optional block)
+   - :n:`{? one or more}` (a repeatable block)
+   - :n:`{* any number of times}` (an optional, repeatable block)
 
-The bottom symbol indicates the separator to use between repeated blocks. For example,
+   The bottom symbol indicates the separator to use between repeated blocks. For example,
 
-- ``rewrite H``
-- ``rewrite -> H``, and
-- ``rewrite H1, H2``
+   - ``rewrite H``
+   - ``rewrite -> H``, and
+   - ``rewrite H1, H2``
 
-are all matches for :n:`rewrite {? ->} {+, term}`.
-
-Tactics
-=======
+   are all matches for :n:`rewrite {? ->} {+, term}`.
 
 .. tacn:: fix @ident @num
 

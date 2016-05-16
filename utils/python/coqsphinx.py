@@ -4,13 +4,16 @@ from docutils import nodes, utils
 from docutils.transforms import Transform
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.roles import code_role
-from docutils.parsers.rst.directives.body import Rubric
+from docutils.parsers.rst.directives.body import MathBlock
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
+from docutils.utils.code_analyzer import Lexer
 
 from sphinx import addnodes
 from sphinx.roles import XRefRole
 from sphinx.domains import Domain, ObjType
+from sphinx.util.nodes import set_source_info
 from sphinx.directives import ObjectDescription
+from sphinx.ext.mathbase import MathDirective, displaymath
 
 from coqnotations import htmlize_str
 from coqdriver import CoqTop, ansicolors
@@ -157,8 +160,12 @@ def NotationRole(role, rawtext, text, lineno, inliner, options={}, content=[]):
     position = inliner.reporter.get_source_and_line(lineno)
     return [nodes.literal(rawtext, '', parse_notation(notation, *position, rawtext=rawtext))], []
 
+def coq_code_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
+    options['language'] = 'Coq'
+    return code_role(role, rawtext, text, lineno, inliner, options, content)
+
 # FIXME pass different languages
-LtacRole = GallinaRole = VernacRole = code_role
+LtacRole = GallinaRole = VernacRole = coq_code_role
 
 class CoqtopDirective(Directive):
     has_content = True
@@ -187,6 +194,59 @@ class ExampleDirective(BaseAdmonition): #FIXME
         self.arguments = ['Example']
         self.options['classes'] = ['admonition', 'note']
         return super().run()
+
+class PreambleDirective(MathDirective):
+    def run(self):
+        self.options['nowrap'] = True
+        [node] = super().run()
+        node['classes'] = ["math-preamble"]
+        return [node]
+
+class InferenceDirective(Directive):
+    required_arguments = 1
+    optional_arguments = 0
+    has_content = True
+
+    def make_math_node(self, latex):
+        node = displaymath()
+        node['latex'] = latex
+        node['label'] = None # Otherwise equations are numbered
+        node['nowrap'] = False
+        node['docname'] = self.state.document.settings.env.docname
+        return node
+
+    @staticmethod
+    def prepare_latex_operand(op):
+        return '\hspace{3em}'.join(op.strip().splitlines())
+
+    def prepare_latex(self, content):
+        parts = re.split('^ *----+ *$', content, flags=re.MULTILINE)
+        if len(parts) != 2:
+            raise self.error('Expected two parts in inference::, separated by a rule (----).')
+
+        top, bottom = tuple(InferenceDirective.prepare_latex_operand(p) for p in parts)
+        return "\\frac{" + top + "}{" + bottom + "}"
+
+    def run(self):
+        self.assert_has_content()
+
+        title = self.arguments[0]
+        content = '\n'.join(self.content)
+        math_node = self.make_math_node(self.prepare_latex(content))
+
+        tid = title.lower() # FIXME sanitize id
+        target = nodes.target('', '', ids=['inference-' + tid])
+        self.state.document.note_explicit_target(target)
+
+        dli = nodes.definition_list_item()
+        dli += target
+        dli += nodes.term('', title)
+        dli += nodes.description('', math_node)
+        dl = nodes.definition_list(content, dli)
+        set_source_info(self, dl)
+        self.add_name(dl)
+
+        return [dl]
 
 class AnsiColorsParser():
     # Coqtop's output crashes ansi.py, because it contains a bunch of extended codes
@@ -232,6 +292,12 @@ class CoqtopBlocksTransform(Transform):
     def is_coqtop_block(node):
         return ('coqtop_options' in node)
 
+    @staticmethod
+    def highlight_sentence(sentence):
+        tokens = Lexer(utils.unescape(sentence, 1), "Coq")
+        for classes, value in tokens:
+            yield nodes.inline(value, value, classes=classes)
+
     def add_coqtop_output(self):
         with CoqTop(coqtop_bin="/build/coq-8.5/bin/coqtop", color=True) as repl:
             for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
@@ -262,9 +328,13 @@ class CoqtopBlocksTransform(Transform):
                 dli = nodes.definition_list_item()
                 for sentence, output in pairs:
                     if opt_in:
-                        dli += nodes.term(sentence, sentence)
+                        # Manually highlight input
+                        chunks = CoqtopBlocksTransform.highlight_sentence(sentence)
+                        dli += nodes.term(sentence, '', *chunks)
                     if opt_out:
-                        dli += nodes.definition(output, *AnsiColorsParser().colorize_str(output))
+                        # Convert automatic highlighting of output
+                        chunks = AnsiColorsParser().colorize_str(output)
+                        dli += nodes.definition(output, *chunks)
                 node.children.clear()
                 node += nodes.definition_list(node.rawsource, dli)
 
@@ -339,6 +409,8 @@ def setup(app):
     app.add_domain(CoqDomain)
     app.add_directive("coqtop", CoqtopDirective)
     app.add_directive("example", ExampleDirective)
+    app.add_directive("inference", InferenceDirective)
+    app.add_directive("preamble", PreambleDirective)
     app.add_transform(CoqtopBlocksTransform)
     app.add_javascript("notations.js")
     app.add_stylesheet("notations.css")

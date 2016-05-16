@@ -100,6 +100,7 @@ primary_domain = 'coq'
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+highlight_language = 'Coq'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -216,17 +217,18 @@ htmlhelp_basename = 'Coq85doc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #'papersize': 'letterpaper',
 
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
 
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    # https://www.topbug.net/blog/2015/12/10/a-collection-of-issues-about-the-latex-output-in-sphinx-and-the-solutions/
+    'preamble': r'\input{/build/coq/doc/common/macros}',
 
-# Latex figure (float) alignment
-#'figure_align': 'htbp',
+    # Latex figure (float) alignment
+    #'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

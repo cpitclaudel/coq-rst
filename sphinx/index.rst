@@ -4,13 +4,15 @@
    contain the root `toctree` directive.
 
 Welcome to Coq's documentation!
-===================================
+===============================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   cic
+   tactics
 
 Indices and tables
 ==================
