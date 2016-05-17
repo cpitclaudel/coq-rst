@@ -31,7 +31,7 @@ sys.path.append(os.path.abspath('../utils/python/'))
 # ones.
 extensions = [
     'sphinx.ext.mathjax',
-    'coqrst.sphinx'
+    'coqrst.coqdomain'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
