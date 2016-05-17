@@ -3,9 +3,6 @@ Example 1: A subset of Coq's tactic reference
 =============================================
 
 Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html.
-Scroll down for examples of ``coqtop`` output.  The bottom of the page has all
-Coq tactics that include repetitions, semi-automatically reverse-engineered from
-the manual.
 
 .. tip::
 
@@ -18,13 +15,14 @@ the manual.
    - :n:`{* any number of times}` (an optional, repeatable block)
 
    The bottom symbol indicates the separator to use between repeated blocks.
-   For example,
+   For example, ``rewrite H``, ``rewrite → H``, and ``rewrite H1, H2`` are all
+   matches for :n:`rewrite {? →} {+, term}`.
 
-   - ``rewrite H``
-   - ``rewrite -> H``, and
-   - ``rewrite H1, H2``
+.. note::
 
-   are all matches for :n:`rewrite {? ->} {+, term}`.
+   Scroll down for examples of ``coqtop`` output.  The bottom of this page lists all
+   Coq forms that include repetitions, semi-automatically reverse-engineered from
+   the manual.
 
 .. tacn:: fix @ident @num
    :name: fix
@@ -122,16 +120,16 @@ the manual.
 
    .. exn:: Impossible to unify … with …
 
-   The apply tactic failed to match the conclusion of term and the current
-   goal. You can help the apply tactic by transforming your goal with the change
-   or pattern tactics (see sections 8.7.7, 8.6.5).
+      The apply tactic failed to match the conclusion of term and the current
+      goal. You can help the apply tactic by transforming your goal with the
+      change or pattern tactics (see sections 8.7.7, 8.6.5).
 
    .. exn:: Unable to find an instance for the variables {+ @ident}
 
-   This occurs when some instantiations of the premises of term are not
-   deducible from the unification. This is the case, for instance, when you want
-   to apply a transitivity property. In this case, you have to use one of the
-   variants below.
+      This occurs when some instantiations of the premises of term are not
+      deducible from the unification. This is the case, for instance, when you
+      want to apply a transitivity property. In this case, you have to use one
+      of the variants below.
 
    .. tacv:: apply @term with {+ @term}
 
@@ -162,12 +160,6 @@ the manual.
       it turns these variables into existential variables which are variables
       still to instantiate (see Section 2.11). The instantiation is intended to
       be found later in the proof.
-
-      .. coqdoc::
-
-         Definition id (x : nat) := x.
-         Hypothesis H : forall y, id y = y.
-         Goal O = O.
 
    .. tacv:: simple apply @term
       :name: simple apply

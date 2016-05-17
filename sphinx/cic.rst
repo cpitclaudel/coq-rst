@@ -1,6 +1,6 @@
-======================================
-Example 2: The typing rules of the CIC
-======================================
+==================================
+Example 2: Typing rules of the CIC
+==================================
 
 Corresponding page: https://coq.inria.fr/refman/Reference-Manual006.html#Typing-rules
 

@@ -75,9 +75,9 @@ Transitioning the manual would make it:
   current collection of LaTeX macros.
 
 - Easier to contribute to: the contents are more consistent, and easier to copy
-  from (contrast with the current manual's macros (``\nelist`` etc.), which are
-  very inconsistently used anyway — search for ``\dots``, ``\ldots``, ``...``,
-  and ``..`` in ``RefMan-tac.v``).
+  from (contrast with the current manual's macros — ``\nelist`` etc. —, which are
+  very inconsistently used anyway: search for ``\dots``, ``\ldots``, ``...``,
+  and ``..`` in ``RefMan-tac.tex`` for example).
 
 - Easier to extend: reStructuredText directives are relatively simple Python
   functions (contrast with writing LaTeX macros).  For a simple example, see the
