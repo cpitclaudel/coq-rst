@@ -2,11 +2,9 @@ import re
 
 from docutils import nodes, utils
 from docutils.transforms import Transform
-from docutils.parsers.rst import Directive
-from docutils.parsers.rst.roles import code_role
-from docutils.parsers.rst.directives.body import MathBlock
+from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.roles import code_role #, set_classes
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
-from docutils.utils.code_analyzer import Lexer
 
 from sphinx import addnodes
 from sphinx.roles import XRefRole
@@ -15,22 +13,31 @@ from sphinx.util.nodes import set_source_info
 from sphinx.directives import ObjectDescription
 from sphinx.ext.mathbase import MathDirective, displaymath
 
-from coqnotations import htmlize_str
-from coqdriver import CoqTop, ansicolors
+from . import coqdoc, notations
+from .repl import CoqTop, ansicolors
 
 def parse_notation(notation, source, line, rawtext=None):
-    node = nodes.raw(rawtext or notation, htmlize_str(notation), format="html")
+    node = nodes.raw(rawtext or notation, notations.htmlize_str(notation), format="html")
     node.source, node.line = source, line
     return node
+
+def highlight_using_coqdoc(sentence):
+    tokens = coqdoc.lex(utils.unescape(sentence, 1))
+    for classes, value in tokens:
+        yield nodes.inline(value, value, classes=classes)
 
 class CoqObject(ObjectDescription):
     TARGET_TEXTS = {
         'tacn': " (tactic notation)",
-        'variant': " (tactic variant)",
+        'tacv': " (tactic variant)",
         'tac': " (tactic)",
         'opt': " (option)",
         'exn': " (error)",
         'vernac': " (command)",
+    }
+
+    option_spec = {
+        'name': directives.unchanged
     }
 
     @property
@@ -42,7 +49,7 @@ class CoqObject(ObjectDescription):
         raise NotImplementedError(self)
 
     def _name_from_signature(self, signature):
-        raise NotImplementedError(self)
+        return None
 
     def _render_signature(self, signature, signode):
         raise NotImplementedError(self)
@@ -58,33 +65,38 @@ class CoqObject(ObjectDescription):
     def _index_suffix(self):
         return CoqObject.TARGET_TEXTS.get(self.objtype, "")
 
-    def _record_target(self, name):
-        inv = self.env.domaindata['coq'][self._subdomain]
-        if name in inv:
+    def _record_name(self, name):
+        # FIXME what happens if an option has the same name as a tactic notation?
+        subdomain_names = self.env.domaindata['coq'][self._subdomain]
+        if name in subdomain_names:
             self.state_machine.reporter.warning(
                 'Duplicate Coq object: {}; other is at {}'.format(
-                    name, self.env.doc2path(inv[name][0])),
+                    name, self.env.doc2path(subdomain_names[name][0])),
                 line=self.lineno)
-        inv[name] = (self.env.docname, self.objtype)
+        subdomain_names[name] = (self.env.docname, self.objtype)
 
     def _add_target(self, signode, name):
-        # FIXME auto-generated name?
-        id = re.sub("[^a-zA-Z0-9]", "", name).lower()
-        target = "coq:{}-{}-{}".format(self._subdomain, self.objtype, id)
-        if target not in self.state.document.ids:
-            signode['ids'].append(target)
-            signode['names'].append(target)
-            # FIXME check that the manually added names are handled by us, and not automatically by RST
-            signode['first'] = (not self.names) # Always true (see ``get_signatures'')
+        targetid = "coq:{}.{}".format(self.objtype, nodes.make_id(name))
+        if targetid not in self.state.document.ids:
+            signode['ids'].append(targetid)
+            signode['names'].append(name)
+            signode['first'] = (not self.names)
             self.state.document.note_explicit_target(signode)
-            self._record_target(name)
-        return target
+            self._record_name(name)
+        return targetid
 
     def _add_index_entry(self, name, target):
         index_text = name + self._index_suffix
         self.indexnode['entries'].append(('single', index_text, target, '', None))
 
-    def add_target_and_index(self, name, sig, signode):
+    def run(self):
+        [idx, node] = super().run()
+        custom_name = self.options.get("name")
+        if custom_name:
+            self.add_target_and_index(custom_name, "", node.children[0])
+        return [idx, node]
+
+    def add_target_and_index(self, name, _, signode):
         if name:
             target = self._add_target(signode, name)
             self._add_index_entry(name, target)
@@ -117,19 +129,16 @@ class PlainObject(CoqObject):
     def _render_signature(self, signature, signode):
         signode += addnodes.desc_name(signature, signature)
 
-class TacticNotationObject(LtacObject):
-    @property
-    def _annotation(self):
-        return None
-
-    def _name_from_signature(self, signature):
-        # TODO fail if more than one signature
-        return self.options.get("name")
-
+class NotationObject(CoqObject):
     def _render_signature(self, signature, signode):
         position = self.state_machine.get_source_and_line(self.lineno)
         tacn_node = parse_notation(signature, *position)
         signode += addnodes.desc_name(signature, '', tacn_node)
+
+class TacticNotationObject(LtacObject, NotationObject):
+    @property
+    def _annotation(self):
+        return None
 
 class TacticNotationVariantObject(TacticNotationObject):
     @property
@@ -145,7 +154,7 @@ class OptionObject(VernacObject):
     def _annotation(self):
         return "Option"
 
-# Uses “exn” since “err” is taken (as a CSS class added by “writer_aux”).
+# Uses “exn” since “err” already is a CSS class added by “writer_aux”.
 class ExceptionObject(TacticNotationObject):
     @property
     def _subdomain(self):
@@ -155,17 +164,27 @@ class ExceptionObject(TacticNotationObject):
     def _annotation(self):
         return "Error"
 
+    def _name_from_signature(self, signature):
+        return signature
+
 def NotationRole(role, rawtext, text, lineno, inliner, options={}, content=[]):
     notation = utils.unescape(text, 1)
     position = inliner.reporter.get_source_and_line(lineno)
     return [nodes.literal(rawtext, '', parse_notation(notation, *position, rawtext=rawtext))], []
 
-def coq_code_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
+def coqdoc_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
     options['language'] = 'Coq'
     return code_role(role, rawtext, text, lineno, inliner, options, content)
+    # Too heavy:
+    # Forked from code_role to use our custom tokenizer
+    # set_classes(options)
+    # classes = ['code', 'coq']
+    # code = utils.unescape(text, 1)
+    # node = nodes.literal(rawtext, '', *highlight_using_coqdoc(code), classes=classes)
+    # return [node], []
 
-# FIXME pass different languages
-LtacRole = GallinaRole = VernacRole = coq_code_role
+# FIXME pass different languages?
+LtacRole = GallinaRole = VernacRole = coqdoc_role
 
 class CoqtopDirective(Directive):
     has_content = True
@@ -178,9 +197,19 @@ class CoqtopDirective(Directive):
         options = self.arguments[0].split() if self.arguments else ['in']
         if 'all' in options:
             options = list(set(options + ['in', 'out']))
-        # Literal blocks are automagically highlighted # TODO: Turn this off?
-        node = nodes.literal_block(content, content, coqtop_options = options, classes=['coqtop'])
+        node = nodes.container(content, coqtop_options = options, classes=['coqtop', 'literal-block'])
         self.add_name(node)
+        return [node]
+
+class CoqdocDirective(Directive):
+    has_content = True
+    required_arguments = 0
+    optional_arguments = 0
+    final_argument_whitespace = True
+
+    def run(self):
+        content = '\n'.join(self.content)
+        node = nodes.container(content, *highlight_using_coqdoc(content), classes=['coqdoc', 'literal-block'])
         return [node]
 
 class ExampleDirective(BaseAdmonition): #FIXME
@@ -217,7 +246,7 @@ class InferenceDirective(Directive):
 
     @staticmethod
     def prepare_latex_operand(op):
-        return '\hspace{3em}'.join(op.strip().splitlines())
+        return r'\hspace{3em}'.join(op.strip().splitlines())
 
     def prepare_latex(self, content):
         parts = re.split('^ *----+ *$', content, flags=re.MULTILINE)
@@ -234,7 +263,7 @@ class InferenceDirective(Directive):
         content = '\n'.join(self.content)
         math_node = self.make_math_node(self.prepare_latex(content))
 
-        tid = title.lower() # FIXME sanitize id
+        tid = nodes.make_id(title)
         target = nodes.target('', '', ids=['inference-' + tid])
         self.state.document.note_explicit_target(target)
 
@@ -244,8 +273,6 @@ class InferenceDirective(Directive):
         dli += nodes.description('', math_node)
         dl = nodes.definition_list(content, dli)
         set_source_info(self, dl)
-        self.add_name(dl)
-
         return [dl]
 
 class AnsiColorsParser():
@@ -292,12 +319,6 @@ class CoqtopBlocksTransform(Transform):
     def is_coqtop_block(node):
         return ('coqtop_options' in node)
 
-    @staticmethod
-    def highlight_sentence(sentence):
-        tokens = Lexer(utils.unescape(sentence, 1), "Coq")
-        for classes, value in tokens:
-            yield nodes.inline(value, value, classes=classes)
-
     def add_coqtop_output(self):
         with CoqTop(coqtop_bin="/build/coq-8.5/bin/coqtop", color=True) as repl:
             for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
@@ -326,10 +347,11 @@ class CoqtopBlocksTransform(Transform):
                     repl.sendline("Undo {}.".format(len(pairs)))
 
                 dli = nodes.definition_list_item()
+                dli['classes'] = ['coqtop-in'] * opt_in + ['coqtop-out'] * opt_out
                 for sentence, output in pairs:
                     if opt_in:
-                        # Manually highlight input
-                        chunks = CoqtopBlocksTransform.highlight_sentence(sentence)
+                        # Use Coqdoq to highlight input
+                        chunks = highlight_using_coqdoc(sentence)
                         dli += nodes.term(sentence, '', *chunks)
                     if opt_out:
                         # Convert automatic highlighting of output
@@ -339,6 +361,7 @@ class CoqtopBlocksTransform(Transform):
                 node += nodes.definition_list(node.rawsource, dli)
 
     def merge_consecutive_coqtop_blocks(self):
+        """Merge consecutive divs wraping lists of command; keep ‘dl’s separate."""
         for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
             if node.parent:
                 for sibling in node.traverse(include_self=False, descend=False,
@@ -350,7 +373,7 @@ class CoqtopBlocksTransform(Transform):
                     else:
                         break
 
-    def apply(self): # FIXME merge successive code blocks, unless they are comment-separated
+    def apply(self):
         self.add_coqtop_output()
         self.merge_consecutive_coqtop_blocks()
 
@@ -361,9 +384,9 @@ class CoqDomain(Domain):
     label = 'Coq'
 
     object_types = {
-        # Directive → (Local name, *xref-roles)
+        # ObjType (= directive type) → (Local name, *xref-roles)
         'tacn': ObjType('tacn', 'tacn'),
-        'variant': ObjType('variant', 'tacn'),
+        'tacv': ObjType('tacv', 'tacn'),
         'tac': ObjType('tac', 'tac'),
         'opt': ObjType('opt', 'opt'),
         'exn': ObjType('exn', 'exn'),
@@ -372,7 +395,7 @@ class CoqDomain(Domain):
 
     directives = {
         'tacn': TacticNotationObject,
-        'variant': TacticNotationVariantObject,
+        'tacv': TacticNotationVariantObject,
         'tac': TacticObject,
         'opt': OptionObject,
         'exn': ExceptionObject,
@@ -381,7 +404,6 @@ class CoqDomain(Domain):
 
     roles = { # FIXME merge some of these
         'tacn': XRefRole(),
-        'variant': XRefRole(),
         'tac': XRefRole(),
         'opt': XRefRole(),
         'exn': XRefRole(),
@@ -408,11 +430,13 @@ class CoqDomain(Domain):
 def setup(app):
     app.add_domain(CoqDomain)
     app.add_directive("coqtop", CoqtopDirective)
+    app.add_directive("coqdoc", CoqdocDirective)
     app.add_directive("example", ExampleDirective)
     app.add_directive("inference", InferenceDirective)
     app.add_directive("preamble", PreambleDirective)
     app.add_transform(CoqtopBlocksTransform)
     app.add_javascript("notations.js")
     app.add_stylesheet("notations.css")
+    app.add_stylesheet("coqdoc.css")
     app.add_stylesheet("ansi.css")
     return {'version': '0.1'}   # identifies the version of our extension

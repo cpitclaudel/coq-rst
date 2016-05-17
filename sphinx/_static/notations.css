@@ -102,17 +102,20 @@ pre.coqtop {
     margin-top: 1em !important;
 }
 
-.coqtop dl {
+.coqdoc, .coqtop dl {
     margin: 12px; /* Copied from RTD theme */
+}
+
+.coqdoc, .coqtop dt, .coqtop dd {
+    font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace !important; /* Copied from RTD theme */
+    font-size: 12px !important; /* Copied from RTD theme */
+    line-height: 1.5 !important; /* Copied from RTD theme */
+    white-space: pre;
 }
 
 .coqtop dt, .coqtop dd {
     border: none !important;
     display: block !important;
-    font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace !important;; /* Copied from RTD theme */
-    font-size: 12px !important;; /* Copied from RTD theme */
-    line-height: 1.5 !important;; /* Copied from RTD theme */
-    white-space: pre;
 }
 
 .math-preamble {

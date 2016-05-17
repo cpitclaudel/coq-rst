@@ -14,7 +14,7 @@ the manual.
    indicates the number of repetitions:
 
    - :n:`{? 0 or 1}` (an optional block)
-   - :n:`{? one or more}` (a repeatable block)
+   - :n:`{+ one or more}` (a repeatable block)
    - :n:`{* any number of times}` (an optional, repeatable block)
 
    The bottom symbol indicates the separator to use between repeated blocks.
@@ -27,6 +27,7 @@ the manual.
    are all matches for :n:`rewrite {? ->} {+, term}`.
 
 .. tacn:: fix @ident @num
+   :name: fix
 
    This tactic is a primitive tactic to start a proof by induction. In general,
    it is easier to rely on higher-level induction tactics such as the ones
@@ -45,7 +46,7 @@ the manual.
    some time of the interactive development of a proof, use the command Guarded
    (see Section 7.3.2).
 
-   .. variant:: fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
+   .. tacv:: fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
 
     This starts a proof by mutual induction. The statements to be simultaneously
     proved are each of the type :n:`forall {+ @binder}, @type`. The identifiers
@@ -56,6 +57,7 @@ the manual.
 
 
 .. tacn:: unfold @qualid
+   :name: unfold
 
    This tactic applies to any goal. The argument qualid must denote a defined
    transparent constant or local definition (see Sections 1.3.2 and 6.10.2). The
@@ -65,12 +67,12 @@ the manual.
 
    .. exn:: @qualid does not denote an evaluable constant
 
-   .. variant:: unfold {+ @qualid}
+   .. tacv:: unfold {+ @qualid}
 
       Replaces simultaneously each of the ``qualid`` with their definitions and
       replaces the current goal with its βι normal form.
 
-   .. variant:: unfold {+, @qualid at {+, @num}}
+   .. tacv:: unfold {+, @qualid at {+, @num}}
 
       The lists of ``num`` specify the occurrences of ``qualid`` to be
       unfolded. Occurrences are located from left to right.
@@ -79,92 +81,26 @@ the manual.
 
       .. exn:: @qualid does not occur
 
-   .. variant:: unfold @string
+   .. tacv:: unfold @string
 
       If string denotes the discriminating symbol of a notation (e.g. ``"+"``)
       or an expression defining a notation (e.g. ``"_ + _"``), and this notation
       refers to an unfoldable constant, then the tactic unfolds it.
 
-   .. variant:: unfold @string%@key
+   .. tacv:: unfold @string%@key
 
       This is variant of unfold string where string gets its interpretation from
       the scope bound to the delimiting key key instead of its default
       interpretation (see Section 12.2.2).
 
-   .. variant:: unfold {+, @qualid|@string at {+, @num}}
+   .. tacv:: unfold {+, @qualid|@string at {+, @num}}
 
       This is the most general form, where ``qualid_or_string`` is either a
       ``qualid`` or a ``string`` referring to a notation.
 
-.. tacn:: apply @term in @ident
-
-   This tactic applies to any goal.  The argument ``term`` is a term well-formed
-   in the local context and the argument ``ident`` is an hypothesis of the
-   context.  The tactic ``apply`` tries to match the conclusion of the type of
-   ``ident`` against a non-dependent premise of the type of ``term``, trying
-   them from right to left.  If it succeeds, the statement of hypothesis
-   ``ident`` is replaced by the conclusion of the type of ``term``. The tactic
-   also returns as many subgoals as the number of other non-dependent premises
-   in the type of ``term`` and of the non-dependent premises of the type of
-   ``ident``.  If the conclusion of the type of ``term`` does not match the goal
-   *and* the conclusion is an inductive type isomorphic to a tuple type, then
-   the tuple is (recursively) decomposed and the first component of the tuple of
-   which a non-dependent premise matches the conclusion of the type of
-   ``ident``. Tuples are decomposed in a width-first left-to-right order (for
-   instance if the type of :g:`H1` is a :g:`A <-> B` statement, and the type of
-   :g:`H2` is :g:`A` then ``apply H1 in H2`` transforms the type of :g:`H2` into
-   :g:`B`).  The tactic ``apply`` relies on first-order pattern-matching with
-   dependent types.
-
-   .. exn:: Statement without assumptions
-
-      This happens if the type of ``term`` has no non dependent premise.
-
-   .. exn:: Unable to apply
-
-      This happens if the conclusion of ``ident`` does not match any of the
-      non dependent premises of the type of ``term``.
-
-   .. variant:: apply {+, @term} in @ident
-
-      This applies each of ``term`` in sequence in ``ident``.
-
-   .. variant:: apply {+, @term with {+ @bindings_list}} in {+, @hyp}
-
-      This does the same but uses the bindings in each ``(id := val)`` to
-      instantiate the parameters of the corresponding type of term (see syntax
-      of bindings in Section 8.1.3).
-
-   .. variant:: eapply {+, @term with {+ @bindings_list}} in {+, @hyp}
-
-      This works as above but turns unresolved bindings into existential
-      variables, if any, instead of failing.
-
-   .. variant:: apply {+, @term with {+ (@id := @val)}} in {+, @hyp} as @intropattern
-
-      This works as ``apply`` above, then applies the ``intropattern`` to the
-      hypothesis ``ident``.
-
-   .. variant:: eapply {+, @term with {+ (@id := @val)}} in {+, @hyp} as @intropattern
-
-      Same as above, but using ``eapply``.
-
-   .. variant:: simple apply @terms in @ident
-
-      This behaves like :n:`apply @term in @ident` but it reasons modulo
-      conversion only on subterms that contain no variables to instantiate. For
-      instance, if :g:`id := fun x:nat => x` and :g:`H : forall y, id y = y -> True`
-      and :g:`H0 : O = O` then :n:`simple apply H in H0` does not succeed
-      because it would require the conversion of :g:`id ?1234` and :g:`O` where
-      :g:`?1234` is a variable to instantiate.  Tactic :n:`simple apply @term in @ident`
-      does not either traverse tuples as :n:`apply @term in @ident` does.
-
-   .. variant:: {? simple} apply {+, @term {? with @bindings_list}} in @ident {? as @intro_pattern}
-
-      This summarizes the different syntactic variants of :n:`apply @term
-      in @ident` and :n:`eapply @term in @ident`.
 
 .. tacn:: apply @term
+   :name: apply
 
    This tactic applies to any goal. The argument ``term`` is a term well-formed
    in the local context. The tactic ``apply`` tries to match the current goal
@@ -197,7 +133,7 @@ the manual.
    to apply a transitivity property. In this case, you have to use one of the
    variants below.
 
-   .. variant:: apply @term with {+ @term}
+   .. tacv:: apply @term with {+ @term}
 
       Provides apply with explicit instantiations for all dependent premises of
       the type of term that do not occur in the conclusion and consequently
@@ -207,19 +143,19 @@ the manual.
 
       .. exn:: Error message: Not the right number of missing arguments
 
-   .. variant:: apply @term with {+ (@ref := @term)}
+   .. tacv:: apply @term with {+ (@ref := @term)}
 
       This also provides apply with values for instantiating premises. Here,
       variables are referred by names and non-dependent products by increasing
       numbers (see syntax in Section 8.1.3).
 
-   .. variant:: apply {+, @term}
+   .. tacv:: apply {+, @term}
 
       This is a shortcut for ``apply term1 ; [ .. | … ; [ .. | apply termn ] … ]``,
       i.e. for the successive applications of :g:`termi+1` on the last subgoal
       generated by apply :g:`termi`, starting from the application of term1.
 
-   .. variant:: eapply @term
+   .. tacv:: eapply @term
 
       The tactic eapply behaves like apply but it does not fail when no
       instantiations are deducible for some variables in the premises. Rather,
@@ -227,13 +163,14 @@ the manual.
       still to instantiate (see Section 2.11). The instantiation is intended to
       be found later in the proof.
 
-      .. code::
+      .. coqdoc::
 
          Definition id (x : nat) := x.
          Hypothesis H : forall y, id y = y.
          Goal O = O.
 
-   .. variant:: simple apply @term
+   .. tacv:: simple apply @term
+      :name: simple apply
 
       This behaves like ``apply`` but it reasons modulo conversion only on
       subterms that contain no variables to instantiate. For instance, the
@@ -250,16 +187,17 @@ the manual.
 
          Fail simple apply H.
 
-      Because it reasons modulo a limited amount of conversion, simple apply
-      fails quicker than apply and it is then well-suited for uses in
+      Because it reasons modulo a limited amount of conversion, :n:`simple apply`
+      fails quicker than :n:`apply` and it is then well-suited for uses in
       used-defined tactics that backtrack often. Moreover, it does not traverse
       tuples as apply does.
 
-   .. tacn:: {? simple} apply {+, @term {? with @bindings_list}} in @ident {? as @intro_pattern}
+   .. tacv:: {? simple} apply {+, @term {? with @bindings_list}} in @ident {? as @intro_pattern}
 
       This summarizes the different syntaxes for apply and eapply.
 
-   .. tacn:: lapply @term
+   .. tacv:: lapply @term
+      :name: lapply
 
       This tactic applies to any goal, say :g:`G`. The argument term has to be
       well-formed in the current context, its type being reducible to a
@@ -350,7 +288,78 @@ the manual.
       .. opt:: Universal Lemma Under Conjunction
 
          This option, which preserves compatibility with versions of Coq prior
-         to 8.4 is also available for :n:`apply @term in @ident`.
+         to 8.4 is also available for :n:`apply @term in @ident` (see
+         :tacn:`apply … in`).
+
+.. tacn:: apply @term in @ident
+   :name: apply … in
+
+   This tactic applies to any goal.  The argument ``term`` is a term well-formed
+   in the local context and the argument ``ident`` is an hypothesis of the
+   context.  The tactic ``apply`` tries to match the conclusion of the type of
+   ``ident`` against a non-dependent premise of the type of ``term``, trying
+   them from right to left.  If it succeeds, the statement of hypothesis
+   ``ident`` is replaced by the conclusion of the type of ``term``. The tactic
+   also returns as many subgoals as the number of other non-dependent premises
+   in the type of ``term`` and of the non-dependent premises of the type of
+   ``ident``.  If the conclusion of the type of ``term`` does not match the goal
+   *and* the conclusion is an inductive type isomorphic to a tuple type, then
+   the tuple is (recursively) decomposed and the first component of the tuple of
+   which a non-dependent premise matches the conclusion of the type of
+   ``ident``. Tuples are decomposed in a width-first left-to-right order (for
+   instance if the type of :g:`H1` is a :g:`A <-> B` statement, and the type of
+   :g:`H2` is :g:`A` then ``apply H1 in H2`` transforms the type of :g:`H2` into
+   :g:`B`).  The tactic ``apply`` relies on first-order pattern-matching with
+   dependent types.
+
+   .. exn:: Statement without assumptions
+
+      This happens if the type of ``term`` has no non dependent premise.
+
+   .. exn:: Unable to apply
+
+      This happens if the conclusion of ``ident`` does not match any of the
+      non dependent premises of the type of ``term``.
+
+   .. tacv:: apply {+, @term} in @ident
+
+      This applies each of ``term`` in sequence in ``ident``.
+
+   .. tacv:: apply {+, @term with {+ @bindings_list}} in {+, @hyp}
+
+      This does the same but uses the bindings in each ``(id := val)`` to
+      instantiate the parameters of the corresponding type of term (see syntax
+      of bindings in Section 8.1.3).
+
+   .. tacv:: eapply {+, @term with {+ @bindings_list}} in {+, @hyp}
+
+      This works as above but turns unresolved bindings into existential
+      variables, if any, instead of failing.
+
+   .. tacv:: apply {+, @term with {+ (@id := @val)}} in {+, @hyp} as @intropattern
+
+      This works as ``apply`` above, then applies the ``intropattern`` to the
+      hypothesis ``ident``.
+
+   .. tacv:: eapply {+, @term with {+ (@id := @val)}} in {+, @hyp} as @intropattern
+
+      Same as above, but using ``eapply``.
+
+   .. tacv:: simple apply @terms in @ident
+      :name: simple apply … in
+
+      This behaves like :n:`apply @term in @ident` but it reasons modulo
+      conversion only on subterms that contain no variables to instantiate. For
+      instance, if :g:`id := fun x:nat => x` and :g:`H : forall y, id y = y -> True`
+      and :g:`H0 : O = O` then :n:`simple apply H in H0` does not succeed
+      because it would require the conversion of :g:`id ?1234` and :g:`O` where
+      :g:`?1234` is a variable to instantiate.  Tactic :n:`simple apply @term in @ident`
+      does not either traverse tuples as :n:`apply @term in @ident` does.
+
+   .. tacv:: {? simple} apply {+, @term {? with @bindings_list}} in @ident {? as @intro_pattern}
+
+      This summarizes the different syntactic variants of :n:`apply @term
+      in @ident` and :n:`eapply @term in @ident`.
 
 .. tacn:: fresh {+ @component}
 .. tacn:: fun {+ @ident} => @expr
