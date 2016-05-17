@@ -112,5 +112,9 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
+* :index:`cmdindex`
+* :index:`tacindex`
+* :index:`optindex`
+* :index:`thmindex`
+* :index:`exnindex`
 * :ref:`search`

@@ -1,4 +1,6 @@
 import re
+from itertools import chain
+from collections import defaultdict
 
 from docutils import nodes, utils
 from docutils.transforms import Transform
@@ -7,16 +9,19 @@ from docutils.parsers.rst.roles import code_role #, set_classes
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 
 from sphinx import addnodes
+from sphinx.locale import l_
 from sphinx.roles import XRefRole
-from sphinx.domains import Domain, ObjType
-from sphinx.util.nodes import set_source_info
+from sphinx.util.nodes import set_source_info, make_refnode
 from sphinx.directives import ObjectDescription
+from sphinx.domains import Domain, ObjType, Index
 from sphinx.ext.mathbase import MathDirective, displaymath
 
 from . import coqdoc, notations
 from .repl import CoqTop, ansicolors
 
 def parse_notation(notation, source, line, rawtext=None):
+    if ":class" in notations.htmlize_str(notation):
+        raise ValueError()
     node = nodes.raw(rawtext or notation, notations.htmlize_str(notation), format="html")
     node.source, node.line = source, line
     return node
@@ -26,8 +31,12 @@ def highlight_using_coqdoc(sentence):
     for classes, value in tokens:
         yield nodes.inline(value, value, classes=classes)
 
+def make_target(objtype, targetid):
+    return "coq:{}.{}".format(objtype, targetid)
+
 class CoqObject(ObjectDescription):
     TARGET_TEXTS = {
+        # Object type → suffix in indices
         'tacn': " (tactic notation)",
         'tacv': " (tactic variant)",
         'tac': " (tactic)",
@@ -40,9 +49,14 @@ class CoqObject(ObjectDescription):
         'name': directives.unchanged
     }
 
-    @property
+    """The semantic domain in which this object lives.
+    It matches exactly one of the roles used for cross-referencing."""
+    subdomain = None
+
     def _subdomain(self):
-        raise NotImplementedError(self)
+        if self.subdomain is None:
+            raise ValueError()
+        return self.subdomain
 
     @property
     def _annotation(self):
@@ -65,24 +79,24 @@ class CoqObject(ObjectDescription):
     def _index_suffix(self):
         return CoqObject.TARGET_TEXTS.get(self.objtype, "")
 
-    def _record_name(self, name):
+    def _record_name(self, name, target_id):
         # FIXME what happens if an option has the same name as a tactic notation?
-        subdomain_names = self.env.domaindata['coq'][self._subdomain]
-        if name in subdomain_names:
+        names_in_subdomain = self.env.domaindata['coq']['objects'][self._subdomain()]
+        if name in names_in_subdomain:
             self.state_machine.reporter.warning(
                 'Duplicate Coq object: {}; other is at {}'.format(
-                    name, self.env.doc2path(subdomain_names[name][0])),
+                    name, self.env.doc2path(names_in_subdomain[name][0])),
                 line=self.lineno)
-        subdomain_names[name] = (self.env.docname, self.objtype)
+        names_in_subdomain[name] = (self.env.docname, self.objtype, target_id)
 
     def _add_target(self, signode, name):
-        targetid = "coq:{}.{}".format(self.objtype, nodes.make_id(name))
+        targetid = make_target(self.objtype, nodes.make_id(name))
         if targetid not in self.state.document.ids:
             signode['ids'].append(targetid)
             signode['names'].append(name)
             signode['first'] = (not self.names)
             self.state.document.note_explicit_target(signode)
-            self._record_name(name)
+            self._record_name(name, targetid)
         return targetid
 
     def _add_index_entry(self, name, target):
@@ -102,28 +116,6 @@ class CoqObject(ObjectDescription):
             self._add_index_entry(name, target)
             return target
 
-class LtacObject(CoqObject):
-    @property
-    def _subdomain(self):
-        return "ltac"
-
-class GallinaObject(CoqObject):
-    @property
-    def _subdomain(self):
-        return "gallina"
-
-class VernacObject(CoqObject):
-    @property
-    def _subdomain(self):
-        return "vernac"
-
-    def _name_from_signature(self, signature):
-        return signature #FIXME
-
-    def _render_signature(self, signature, signode):
-        position = self.state_machine.get_source_and_line(self.lineno)
-        tacn_node = parse_notation(signature, *position)
-        signode += addnodes.desc_name(signature, '', tacn_node)
 
 class PlainObject(CoqObject):
     def _render_signature(self, signature, signode):
@@ -135,7 +127,21 @@ class NotationObject(CoqObject):
         tacn_node = parse_notation(signature, *position)
         signode += addnodes.desc_name(signature, '', tacn_node)
 
-class TacticNotationObject(LtacObject, NotationObject):
+class TacticObject(CoqObject):
+    subdomain = "tac"
+
+class GallinaObject(CoqObject):
+    subdomain = "thm"
+
+class VernacObject(CoqObject):
+    subdomain = "cmd"
+
+    def _name_from_signature(self, signature):
+        return signature #FIXME
+
+class TacticNotationObject(NotationObject):
+    subdomain = "tacn"
+
     @property
     def _annotation(self):
         return None
@@ -145,20 +151,16 @@ class TacticNotationVariantObject(TacticNotationObject):
     def _annotation(self):
         return "Variant"
 
-class TacticObject(LtacObject):
-    #TODO
-    pass
+class OptionObject(NotationObject):
+    subdomain = "opt"
 
-class OptionObject(VernacObject):
     @property
     def _annotation(self):
         return "Option"
 
 # Uses “exn” since “err” already is a CSS class added by “writer_aux”.
-class ExceptionObject(TacticNotationObject):
-    @property
-    def _subdomain(self):
-        return "errors"
+class ExceptionObject(NotationObject):
+    subdomain = "exn"
 
     @property
     def _annotation(self):
@@ -377,6 +379,56 @@ class CoqtopBlocksTransform(Transform):
         self.add_coqtop_output()
         self.merge_consecutive_coqtop_blocks()
 
+class CoqSubdomainsIndex(Index):
+    """
+    Index subclass to provide subdomain-specific indices.
+    """
+
+    name, localname, shortname, subdomains = None, None, None, None # Must be overwritten
+
+    def generate(self, docnames=None):
+        content = defaultdict(list)
+        items = chain(*(self.domain.data['objects'][subdomain].items()
+                        for subdomain in self.subdomains))
+
+        for itemname, (docname, _, anchor) in sorted(items, key=lambda x: x[0].lower()):
+            if docnames and docname not in docnames:
+                continue
+
+            entries = content[itemname[0].lower()]
+            entries.append([itemname, 0, docname, anchor, '', '', ''])
+
+        collapse = False
+        content = sorted(content.items())
+        return content, collapse
+
+class CoqVernacIndex(CoqSubdomainsIndex):
+    name, localname, shortname, subdomains = "cmdindex", "Command Index", "commands", ["cmd"]
+
+class CoqTacticIndex(CoqSubdomainsIndex):
+    name, localname, shortname, subdomains = "tacindex", "Tactic Index", "tactics", ["tac", "tacn"]
+
+class CoqOptionIndex(CoqSubdomainsIndex):
+    name, localname, shortname, subdomains = "optindex", "Option Index", "options", ["opt"]
+
+class CoqGallinaIndex(CoqSubdomainsIndex):
+    name, localname, shortname, subdomains = "thmindex", "Coq Gallina Index", "theorems", ["thm"]
+
+class CoqExceptionIndex(CoqSubdomainsIndex):
+    name, localname, shortname, subdomains = "exnindex", "Error Index", "errors", ["exn"]
+
+class IndexXRefRole(XRefRole):
+    lowercase = True,
+    innernodeclass = nodes.inline
+    warn_dangling = True
+
+    def process_link(self, env, refnode, has_explicit_title, title, target):
+        if not has_explicit_title:
+            index = CoqDomain.find_index_by_name(target)
+            if index:
+                title = index.localname
+        return title, target
+
 class CoqDomain(Domain):
     """A domain to document Coq code."""
 
@@ -385,29 +437,40 @@ class CoqDomain(Domain):
 
     object_types = {
         # ObjType (= directive type) → (Local name, *xref-roles)
+        'cmd': ObjType('cmd', 'cmd'), # TODO rename to “vernac”?
+        'tac': ObjType('tac', 'tac'),
         'tacn': ObjType('tacn', 'tacn'),
         'tacv': ObjType('tacv', 'tacn'),
-        'tac': ObjType('tac', 'tac'),
         'opt': ObjType('opt', 'opt'),
         'exn': ObjType('exn', 'exn'),
-        'vernac': ObjType('vernac', 'vernac'),
+        # TODO add thm?
+        'index': ObjType('index', 'index', searchprio=-1)
     }
 
     directives = {
+        # Note that some directives live in the same semantic subdomain; ie
+        # there's one directive per object type, but some object types map to
+        # the same role.
+        'cmd': VernacObject,
+        'tac': TacticObject,
         'tacn': TacticNotationObject,
         'tacv': TacticNotationVariantObject,
-        'tac': TacticObject,
         'opt': OptionObject,
+        'thm': GallinaObject,
         'exn': ExceptionObject,
-        'vernac': VernacObject,
     }
 
-    roles = { # FIXME merge some of these
-        'tacn': XRefRole(),
+    roles = {
+        # Each of these roles lives in a different semantic “subdomain”
+        'cmd': XRefRole(),
         'tac': XRefRole(),
+        'tacn': XRefRole(),
         'opt': XRefRole(),
+        'thm': XRefRole(),
         'exn': XRefRole(),
-        'vernac': XRefRole(),
+        # This one is special
+        'index': IndexXRefRole(),
+        # These are used for highlighting
         'notation': NotationRole,
         'gallina': GallinaRole,
         'ltac': LtacRole,
@@ -416,16 +479,56 @@ class CoqDomain(Domain):
         'l': LtacRole,
     }
 
+    indices = [CoqVernacIndex, CoqTacticIndex, CoqOptionIndex, CoqGallinaIndex, CoqExceptionIndex]
+
     data_version = 1
     initial_data = {
-        'ltac': {},
-        'gallina': {},
-        'vernac': {},
-        'errors': {},
+        # Collect everything under a key that we control, since Sphinx adds
+        # others, such as “version”
+        'objects' : { # subdomain → docname, objtype, targetid
+            'cmd': {},
+            'tac': {},
+            'tacn': {},
+            'opt': {},
+            'thm': {},
+            'exn': {},
+        }
     }
 
-    def clear_doc(self, docname):
-        dict().pop(docname, None)
+    @staticmethod
+    def find_index_by_name(targetid):
+        for index in CoqDomain.indices:
+            if index.name == targetid:
+                return index
+
+    def get_objects(self):
+        for _, objects in self.data['objects'].items():
+            for name, (docname, objtype, targetid) in objects.items():
+                yield (name, name, objtype, docname, targetid, self.object_types[objtype].attrs['searchprio'])
+        for index in self.indices:
+            # FIXME does removing this do anything? Try throwing from here and seeing what happens
+            # StandaloneHTMLBuilder.prepare_writing adds a "coq-" prefix to the index
+            # (fully qualified name, display name, type, docname, anchor, priority)
+            yield (index.name, index.localname, 'index', "coq-" + index.name, '', -1)
+
+    def resolve_xref(self, env, fromdocname, builder, role, targetname, node, contnode):
+        # ‘target’ is the name that was written in the document
+        # ‘role’ is where this xref comes from; it's exactly one of our subdomains
+        if role == 'index':
+            index = CoqDomain.find_index_by_name(targetname)
+            if index:
+                return make_refnode(builder, fromdocname, "coq-" + index.name, '', contnode, index.localname)
+        else:
+            resolved = self.data['objects'][role].get(targetname)
+            if resolved:
+                (todocname, _, targetid) = resolved
+                return make_refnode(builder, fromdocname, todocname, targetid, contnode, targetname)
+
+    def clear_doc(self, docname_to_clear):
+        for subdomain_objects in self.data['objects'].values():
+            for name, (docname, _, _) in list(subdomain_objects.items()):
+                if docname == docname_to_clear:
+                    del subdomain_objects[name]
 
 def setup(app):
     app.add_domain(CoqDomain)
@@ -439,4 +542,8 @@ def setup(app):
     app.add_stylesheet("notations.css")
     app.add_stylesheet("coqdoc.css")
     app.add_stylesheet("ansi.css")
+    # Sanity checks:
+    subdomains = set(obj.subdomain for obj in CoqDomain.directives.values())
+    assert subdomains == set(chain(*(idx.subdomains for idx in CoqDomain.indices)))
+    assert subdomains.issubset(CoqDomain.roles.keys())
     return {'version': '0.1'}   # identifies the version of our extension
