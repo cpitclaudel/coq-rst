@@ -175,8 +175,8 @@ def NotationRole(role, rawtext, text, lineno, inliner, options={}, content=[]):
 def coqdoc_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
     options['language'] = 'Coq'
     return code_role(role, rawtext, text, lineno, inliner, options, content)
-    # Too heavy:
-    # Forked from code_role to use our custom tokenizer
+    ## Too heavy:
+    ## Forked from code_role to use our custom tokenizer
     # set_classes(options)
     # classes = ['code', 'coq']
     # code = utils.unescape(text, 1)
@@ -209,8 +209,9 @@ class CoqdocDirective(Directive):
 
     def run(self):
         content = '\n'.join(self.content)
-        node = nodes.container(content, *highlight_using_coqdoc(content), classes=['coqdoc', 'literal-block'])
-        return [node]
+        node = nodes.inline(content, '', *highlight_using_coqdoc(content), classes=['coqdoc'])
+        wrapper = nodes.container(content, node, classes=['literal-block'])
+        return [wrapper]
 
 class ExampleDirective(BaseAdmonition): #FIXME
     node_class = nodes.admonition
@@ -327,12 +328,12 @@ class CoqtopBlocksTransform(Transform):
                 opt_undo = 'undo' in options
                 opt_reset = 'reset' in options
                 opt_all, opt_none = 'all' in options, 'none' in options
-                opt_in, opt_out = opt_all or 'in' in options, opt_all or 'out' in options
+                opt_input, opt_output = opt_all or 'in' in options, opt_all or 'out' in options
 
                 unexpected_options = list(set(options) - set(('reset', 'undo', 'all', 'none', 'in', 'out')))
                 if unexpected_options:
                     raise ValueError("Unexpected options for .. coqtop:: {}".format(unexpected_options))
-                elif (opt_in or opt_out) and opt_none:
+                elif (opt_input or opt_output) and opt_none:
                     raise ValueError("Inconsistent options for .. coqtop:: ‘none’ with ‘in’, ‘out’, or ‘all’")
                 elif opt_reset and opt_undo:
                     raise ValueError("Inconsistent options for .. coqtop:: ‘undo’ with ‘reset’")
@@ -346,17 +347,16 @@ class CoqtopBlocksTransform(Transform):
                 if opt_undo:
                     repl.sendline("Undo {}.".format(len(pairs)))
 
+                # dli['classes'] = ['coqtop-in-enabled'] * opt_input + ['coqtop-out-enabled'] * opt_output
                 dli = nodes.definition_list_item()
-                dli['classes'] = ['coqtop-in'] * opt_in + ['coqtop-out'] * opt_out
+                hide_unless = lambda setting: ['coqtop-hidden'] * (not setting)
                 for sentence, output in pairs:
-                    if opt_in:
-                        # Use Coqdoq to highlight input
-                        chunks = highlight_using_coqdoc(sentence)
-                        dli += nodes.term(sentence, '', *chunks)
-                    if opt_out:
-                        # Convert automatic highlighting of output
-                        chunks = AnsiColorsParser().colorize_str(output)
-                        dli += nodes.definition(output, *chunks)
+                    # Use Coqdoq to highlight input
+                    in_chunks = highlight_using_coqdoc(sentence)
+                    dli += nodes.term(sentence, '', *in_chunks, classes=hide_unless(opt_input))
+                    # Convert automatic highlighting of output
+                    out_chunks = AnsiColorsParser().colorize_str(output)
+                    dli += nodes.definition(output, *out_chunks, classes=hide_unless(opt_output))
                 node.children.clear()
                 node += nodes.definition_list(node.rawsource, dli)
 

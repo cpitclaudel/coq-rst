@@ -29,7 +29,7 @@
     color: black;
     cursor: help;
     display: inline-block;
-    font-size: 0.7em;
+    font-size: 0.75em;
     font-weight: bolder;
     height: 1.2em;
     position: absolute;
@@ -76,10 +76,6 @@ dt > .property {
 
 /* Coqtop IO */
 
-pre.coqtop {
-    white-space: normal;
-}
-
 .coqtop dd, .ansi-bg-default {
     background: #2e3436 !important;
 }
@@ -106,6 +102,11 @@ pre.coqtop {
     margin: 12px; /* Copied from RTD theme */
 }
 
+.coqdoc {
+    display: block;
+    white-space: pre;
+}
+
 .coqdoc, .coqtop dt, .coqtop dd {
     font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace !important; /* Copied from RTD theme */
     font-size: 12px !important; /* Copied from RTD theme */
@@ -118,6 +119,23 @@ pre.coqtop {
     display: block !important;
 }
 
+dd.coqtop-hidden { /* Overqualifying for precedence */
+    display: none !important;
+}
+
 .math-preamble {
     display: none;
+}
+
+/* Pygments for Coq is confused by ‘…’ */
+code span.error {
+    background: inherit !important;
+    line-height: inherit !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}
+
+/* Red is too aggressive */
+.rst-content tt.literal, .rst-content tt.literal, .rst-content code.literal {
+    color: inherit !important;
 }
