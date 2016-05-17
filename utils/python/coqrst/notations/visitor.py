@@ -15,7 +15,7 @@ class TacticNotationsToHTMLVisitor(TacticNotationsVisitor):
                 tags.sub(separator.getText())
 
     def visitCurlies(self, ctx:TacticNotationsParser.CurliesContext):
-        sp = tags.span(__class="curlies")
+        sp = tags.span(_class="curlies")
         sp.add("{")
         with sp:
             self.visitChildren(ctx)
