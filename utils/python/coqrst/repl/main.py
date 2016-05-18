@@ -1,3 +1,4 @@
+import re
 import pexpect
 
 class CoqTop:
@@ -24,7 +25,7 @@ class CoqTop:
         return self.coqtop.before
 
     def sendline(self, line):
-        line = line.strip()
+        line = re.sub(r"\s+", " ", line).strip()
         print("Sending {}".format(line))
         self.coqtop.sendline(line)
         return self.next_prompt()

@@ -325,44 +325,51 @@ class CoqtopBlocksTransform(Transform):
     def is_coqtop_block(node):
         return ('coqtop_options' in node)
 
+    @staticmethod
+    def split_sentences(source):
+        return re.split(r"(?<=\.)\s+", source)
+
+    @staticmethod
+    def parse_options(options):
+        opt_undo = 'undo' in options
+        opt_reset = 'reset' in options
+        opt_all, opt_none = 'all' in options, 'none' in options
+        opt_input, opt_output = opt_all or 'in' in options, opt_all or 'out' in options
+
+        unexpected_options = list(set(options) - set(('reset', 'undo', 'all', 'none', 'in', 'out')))
+        if unexpected_options:
+            raise ValueError("Unexpected options for .. coqtop:: {}".format(unexpected_options))
+        elif (opt_input or opt_output) and opt_none:
+            raise ValueError("Inconsistent options for .. coqtop:: ‘none’ with ‘in’, ‘out’, or ‘all’")
+        elif opt_reset and opt_undo:
+            raise ValueError("Inconsistent options for .. coqtop:: ‘undo’ with ‘reset’")
+
+        return opt_undo, opt_reset, opt_input, opt_output
+
     def add_coqtop_output(self):
         with CoqTop(coqtop_bin="/build/coq-8.5/bin/coqtop", color=True) as repl:
             for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
                 options = node['coqtop_options']
-
-                opt_undo = 'undo' in options
-                opt_reset = 'reset' in options
-                opt_all, opt_none = 'all' in options, 'none' in options
-                opt_input, opt_output = opt_all or 'in' in options, opt_all or 'out' in options
-
-                unexpected_options = list(set(options) - set(('reset', 'undo', 'all', 'none', 'in', 'out')))
-                if unexpected_options:
-                    raise ValueError("Unexpected options for .. coqtop:: {}".format(unexpected_options))
-                elif (opt_input or opt_output) and opt_none:
-                    raise ValueError("Inconsistent options for .. coqtop:: ‘none’ with ‘in’, ‘out’, or ‘all’")
-                elif opt_reset and opt_undo:
-                    raise ValueError("Inconsistent options for .. coqtop:: ‘undo’ with ‘reset’")
+                opt_undo, opt_reset, opt_input, opt_output = self.parse_options(options)
 
                 if opt_reset:
                     repl.sendline("Reset Initial.")
                 pairs = []
-                for sentence in node.rawsource.splitlines():
-                    if sentence:
-                        pairs.append((sentence, repl.sendline(sentence)))
+                for sentence in self.split_sentences(node.rawsource):
+                    pairs.append((sentence, repl.sendline(sentence)))
                 if opt_undo:
                     repl.sendline("Undo {}.".format(len(pairs)))
 
-                # dli['classes'] = ['coqtop-in-enabled'] * opt_input + ['coqtop-out-enabled'] * opt_output
                 dli = nodes.definition_list_item()
                 hide_unless = lambda setting: ['coqtop-hidden'] * (not setting)
                 for sentence, output in pairs:
                     # Use Coqdoq to highlight input
                     in_chunks = highlight_using_coqdoc(sentence)
                     dli += nodes.term(sentence, '', *in_chunks, classes=hide_unless(opt_input))
-                    # Convert automatic highlighting of output
+                    # Parse ANSI sequences to highlight output
                     out_chunks = AnsiColorsParser().colorize_str(output)
                     dli += nodes.definition(output, *out_chunks, classes=hide_unless(opt_output))
-                node.children.clear()
+                node.clear()
                 node += nodes.definition_list(node.rawsource, dli)
 
     def merge_consecutive_coqtop_blocks(self):
@@ -415,7 +422,7 @@ class CoqOptionIndex(CoqSubdomainsIndex):
     name, localname, shortname, subdomains = "optindex", "Option Index", "options", ["opt"]
 
 class CoqGallinaIndex(CoqSubdomainsIndex):
-    name, localname, shortname, subdomains = "thmindex", "Coq Gallina Index", "theorems", ["thm"]
+    name, localname, shortname, subdomains = "thmindex", "Gallina Index", "theorems", ["thm"]
 
 class CoqExceptionIndex(CoqSubdomainsIndex):
     name, localname, shortname, subdomains = "exnindex", "Error Index", "errors", ["exn"]
