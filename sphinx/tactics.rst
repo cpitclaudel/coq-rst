@@ -60,15 +60,15 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html.
    This tactic applies to any goal. The argument qualid must denote a defined
    transparent constant or local definition (see Sections 1.3.2 and 6.10.2). The
    tactic unfold applies the δ rule to each occurrence of the constant to which
-   qualid refers in the current goal and then replaces it with its βι-normal
-   form.
+   qualid refers in the current goal and then replaces it with its :term:`βι
+   normal form`.
 
    .. exn:: @qualid does not denote an evaluable constant
 
    .. tacv:: unfold {+ @qualid}
 
       Replaces simultaneously each of the ``qualid`` with their definitions and
-      replaces the current goal with its βι normal form.
+      replaces the current goal with its :term:`βι normal form`.
 
    .. tacv:: unfold {+, @qualid at {+, @num}}
 

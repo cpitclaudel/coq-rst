@@ -92,6 +92,8 @@ Transitioning the manual would make it:
   - A script that imports documentation for TACTIC EXTEND patterns straight from
     source comments (*à la* autodoc)
 
+  - Glossaries
+
 - Easier to machine-read: it's virtually impossible to reliably extract tactic
   notations, options, and vernacs from the current manual.
 
@@ -105,6 +107,7 @@ Welcome to a tiny subset of Coq's documentation!
 
    tactics
    cic
+   glossary
 
 Each page has a link to its source; check it out!
 
