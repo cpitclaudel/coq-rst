@@ -39,9 +39,10 @@ class TacticNotationsToDotsVisitor(TacticNotationsVisitor):
     def visitRepeat(self, ctx:TacticNotationsParser.RepeatContext):
         separator = ctx.ATOM()
         self.visitChildren(ctx)
-        spacer = (separator + " " if separator else "")
-        self.buffer.write(spacer + "…" + spacer)
-        self.visitChildren(ctx)
+        if ctx.LGROUP().getText()[1] == "+":
+            spacer = (separator + " " if separator else "")
+            self.buffer.write(spacer + "…" + spacer)
+            self.visitChildren(ctx)
 
     def visitCurlies(self, ctx:TacticNotationsParser.CurliesContext):
         self.buffer.write("{")
