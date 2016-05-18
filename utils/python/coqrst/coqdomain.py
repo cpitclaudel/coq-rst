@@ -133,11 +133,11 @@ class TacticObject(CoqObject):
 class GallinaObject(CoqObject):
     subdomain = "thm"
 
-class VernacObject(CoqObject):
+class VernacObject(NotationObject):
     subdomain = "cmd"
 
     def _name_from_signature(self, signature):
-        return signature #FIXME
+        return notations.stringify_with_ellipses(signature)
 
 class TacticNotationObject(NotationObject):
     subdomain = "tacn"
@@ -512,13 +512,11 @@ class CoqDomain(Domain):
                 return index
 
     def get_objects(self):
+        # Used for searching and object inventories (intersphinx)
         for _, objects in self.data['objects'].items():
             for name, (docname, objtype, targetid) in objects.items():
                 yield (name, name, objtype, docname, targetid, self.object_types[objtype].attrs['searchprio'])
         for index in self.indices:
-            # FIXME does removing this do anything? Try throwing from here and seeing what happens
-            # StandaloneHTMLBuilder.prepare_writing adds a "coq-" prefix to the index
-            # (fully qualified name, display name, type, docname, anchor, priority)
             yield (index.name, index.localname, 'index', "coq-" + index.name, '', -1)
 
     def resolve_xref(self, env, fromdocname, builder, role, targetname, node, contnode):
