@@ -83,7 +83,7 @@ Transitioning the manual would make it:
   functions (contrast with writing LaTeX macros).  For a simple example, see the
   source of the *CIC typing rules* example below, or the ``coqtop`` directive in
   the tactics example (it does essentially the same as ``coq-tex``).  Some
-  random ideas:
+  random ideas that would be relatively easy:
 
   - A “run this example in jsCoq” button.
 
@@ -93,6 +93,8 @@ Transitioning the manual would make it:
     source comments (*à la* autodoc)
 
   - Glossaries
+
+  - More indices (for example, an index of examples)
 
 - Easier to machine-read: it's virtually impossible to reliably extract tactic
   notations, options, and vernacs from the current manual.

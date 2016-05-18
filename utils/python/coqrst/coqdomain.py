@@ -218,7 +218,7 @@ class CoqdocDirective(Directive):
         wrapper = nodes.container(content, node, classes=['literal-block'])
         return [wrapper]
 
-class ExampleDirective(BaseAdmonition): #FIXME
+class ExampleDirective(BaseAdmonition):
     node_class = nodes.admonition
 
     def run(self):
@@ -447,13 +447,13 @@ class CoqDomain(Domain):
 
     object_types = {
         # ObjType (= directive type) → (Local name, *xref-roles)
-        'cmd': ObjType('cmd', 'cmd'), # TODO rename to “vernac”?
+        'cmd': ObjType('cmd', 'cmd'),
         'tac': ObjType('tac', 'tac'),
         'tacn': ObjType('tacn', 'tacn'),
         'tacv': ObjType('tacv', 'tacn'),
         'opt': ObjType('opt', 'opt'),
+        'thm': ObjType('thm', 'thm'),
         'exn': ObjType('exn', 'exn'),
-        # TODO add thm?
         'index': ObjType('index', 'index', searchprio=-1)
     }
 
