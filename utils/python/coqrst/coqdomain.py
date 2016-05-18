@@ -80,8 +80,8 @@ class CoqObject(ObjectDescription):
         return CoqObject.TARGET_TEXTS.get(self.objtype, "")
 
     def _record_name(self, name, target_id):
-        # FIXME what happens if an option has the same name as a tactic notation?
         names_in_subdomain = self.env.domaindata['coq']['objects'][self._subdomain()]
+        # Check that two objects in the same domain don't have the same name
         if name in names_in_subdomain:
             self.state_machine.reporter.warning(
                 'Duplicate Coq object: {}; other is at {}'.format(
@@ -158,6 +158,9 @@ class OptionObject(NotationObject):
     def _annotation(self):
         return "Option"
 
+    def _name_from_signature(self, signature):
+        return notations.stringify_with_ellipses(signature)
+
 # Uses “exn” since “err” already is a CSS class added by “writer_aux”.
 class ExceptionObject(NotationObject):
     subdomain = "exn"
@@ -167,7 +170,7 @@ class ExceptionObject(NotationObject):
         return "Error"
 
     def _name_from_signature(self, signature):
-        return signature
+        return notations.stringify_with_ellipses(signature)
 
 def NotationRole(role, rawtext, text, lineno, inliner, options={}, content=[]):
     notation = utils.unescape(text, 1)

@@ -1,3 +1,5 @@
+from io import StringIO
+
 from dominate import tags
 
 from .TacticNotationsParser import TacticNotationsParser
@@ -29,3 +31,28 @@ class TacticNotationsToHTMLVisitor(TacticNotationsVisitor):
 
     def visitWhitespace(self, ctx:TacticNotationsParser.WhitespaceContext):
         tags.span(" ")          # TODO: no need for a <span> here
+
+class TacticNotationsToDotsVisitor(TacticNotationsVisitor):
+    def __init__(self):
+        self.buffer = StringIO()
+
+    def visitRepeat(self, ctx:TacticNotationsParser.RepeatContext):
+        separator = ctx.ATOM()
+        self.visitChildren(ctx)
+        spacer = (separator + " " if separator else "")
+        self.buffer.write(spacer + "…" + spacer)
+        self.visitChildren(ctx)
+
+    def visitCurlies(self, ctx:TacticNotationsParser.CurliesContext):
+        self.buffer.write("{")
+        self.visitChildren(ctx)
+        self.buffer.write("}")
+
+    def visitAtomic(self, ctx:TacticNotationsParser.AtomicContext):
+        self.buffer.write(ctx.ATOM().getText())
+
+    def visitHole(self, ctx:TacticNotationsParser.HoleContext):
+        self.buffer.write("‘{}’".format(ctx.ID().getText()[1:]))
+
+    def visitWhitespace(self, ctx:TacticNotationsParser.WhitespaceContext):
+        self.buffer.write(" ")

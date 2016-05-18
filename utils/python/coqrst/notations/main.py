@@ -1,6 +1,6 @@
 from dominate import tags
 
-from .visitor import TacticNotationsToHTMLVisitor
+from . import visitors
 from .TacticNotationsLexer import TacticNotationsLexer
 from .TacticNotationsParser import TacticNotationsParser
 
@@ -10,10 +10,10 @@ def parse(notation):
     lexer = TacticNotationsLexer(InputStream(notation))
     return TacticNotationsParser(CommonTokenStream(lexer)).top()
 
-def render(tree):
+def html_render(tree):
     top = tags.span(_class='notation')
     with top:
-        TacticNotationsToHTMLVisitor().visit(tree)
+        visitors.TacticNotationsToHTMLVisitor().visit(tree)
     return top
 
 def substitute(notation):
@@ -24,7 +24,7 @@ def substitute(notation):
     return notation
 
 def htmlize(notation):
-    return render(parse(substitute(notation)))
+    return html_render(parse(substitute(notation)))
 
 def htmlize_str(notation):
     # ‘pretty=True’ introduces spurious spaces
@@ -33,3 +33,11 @@ def htmlize_str(notation):
 def htmlize_p(notation):
     with tags.p():
         htmlize(notation)
+
+def string_render(tree):
+    vs = visitors.TacticNotationsToDotsVisitor()
+    vs.visit(tree)
+    return vs.buffer.getvalue()
+
+def stringify_with_ellipses(notation):
+    return string_render(parse(substitute(notation)))
