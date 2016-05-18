@@ -139,7 +139,7 @@ Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html.
       must be given according to the order of these dependent premises of the
       type of ``term``.
 
-      .. exn:: Error message: Not the right number of missing arguments
+      .. exn:: Not the right number of missing arguments
 
    .. tacv:: apply @term with {+ (@ref := @term)}
 

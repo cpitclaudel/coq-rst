@@ -65,19 +65,21 @@ This includes:
 Two small sections of Coq's manual, translated to *reStructuredText*.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This gives a flavor of reStructuredText and its Coq-specific extensions (looking
+at page sources), as well as a preview of what results might look like.
+
 I'm a Coq developer, what's in for me?
 --------------------------------------
 
 Transitioning the manual would make it:
 
 - Easier to write and maintain: the input format is much simpler than LaTeX, and
-  the proposed (regexp-style) tactic notation format is much simpler than the
-  current collection of LaTeX macros.
+  the proposed (regexp-style) tactic notation format is very simple.
 
-- Easier to contribute to: the contents are more consistent, and easier to copy
-  from (contrast with the current manual's macros — ``\nelist`` etc. —, which are
-  very inconsistently used anyway: search for ``\dots``, ``\ldots``, ``...``,
-  and ``..`` in ``RefMan-tac.tex`` for example).
+- Easier to contribute to: the contents are more consistent, and the format is
+  easier to learn that the current manual's macros (``\nelist`` etc.), which are
+  very inconsistently used (search for ``\dots``, ``\ldots``, ``...``,
+  and ``..`` in ``RefMan-tac.tex`` for examples).
 
 - Easier to extend: reStructuredText directives are relatively simple Python
   functions (contrast with writing LaTeX macros).  For a simple example, see the
@@ -97,7 +99,8 @@ Transitioning the manual would make it:
   - More indices (for example, an index of examples)
 
 - Easier to machine-read: it's virtually impossible to reliably extract tactic
-  notations, options, and vernacs from the current manual.
+  notations, options, and vernacs from the current manual, while it would be
+  very easy to so in this format.
 
 - Prettier and more user-friendly (hopefully!)
 
@@ -117,9 +120,11 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :index:`cmdindex`
 * :index:`tacindex`
 * :index:`optindex`
-* :index:`thmindex`
 * :index:`exnindex`
 * :ref:`search`
+
+.. No entries yet
+  * :index:`cmdindex`
+  * :index:`thmindex`

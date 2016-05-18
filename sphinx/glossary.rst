@@ -27,4 +27,4 @@ Coq glossary
                           | (x, y) => id (x + y)
                           end.
 
-         Eval cbv beta in ((fun x y: nat => id (x + y)) 1 2).
+         Eval cbv beta in (fun x y: nat => id (x + y)) 1 2.
