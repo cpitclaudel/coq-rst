@@ -20,14 +20,15 @@ function annotateSub(separator) {
 
 function annotateNotations () {
     $(".repeat-wrapper > sup")
-        .attr("title", function(i, _attr) {
+        .attr("data-hint", function() {
             return annotateSup($(this).text());
-        });
+        }).addClass("hint--top hint--rounded");
 
     $(".repeat-wrapper > sub")
-        .attr("title", function(i, _attr) {
+        .attr("data-hint", function() {
             return annotateSub($(this).text());
-        }); //.text(function(i, text) { return translatePunctuation(text); });
+        }).addClass("hint--bottom hint--rounded");
+    //.text(function(i, text) { return translatePunctuation(text); });
 }
 
 $(annotateNotations);

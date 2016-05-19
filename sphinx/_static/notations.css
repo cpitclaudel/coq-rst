@@ -27,7 +27,7 @@
     background: #EAEAEA;
     border: 1px solid #AAA;
     color: black;
-    cursor: help;
+    /* cursor: help; */
     display: inline-block;
     font-size: 0.75em;
     font-weight: bolder;
