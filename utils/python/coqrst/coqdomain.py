@@ -42,7 +42,7 @@ class CoqObject(ObjectDescription):
         'tac': " (tactic)",
         'opt': " (option)",
         'exn': " (error)",
-        'vernac': " (command)",
+        'cmd': " (command)",
     }
 
     option_spec = {
@@ -135,6 +135,10 @@ class GallinaObject(CoqObject):
 
 class VernacObject(NotationObject):
     subdomain = "cmd"
+
+    @property
+    def _annotation(self):
+        return "Command"
 
     def _name_from_signature(self, signature):
         return notations.stringify_with_ellipses(signature)
@@ -346,6 +350,14 @@ class CoqtopBlocksTransform(Transform):
 
         return opt_undo, opt_reset, opt_input, opt_output
 
+    @staticmethod
+    def block_classes(should_show, contents=None):
+        is_empty = contents is not None and re.match(r"^\s*$", contents)
+        if is_empty or not should_show:
+            return ['coqtop-hidden']
+        else:
+            return []
+
     def add_coqtop_output(self):
         with CoqTop(coqtop_bin="/build/coq-8.5/bin/coqtop", color=True) as repl:
             for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
@@ -361,14 +373,13 @@ class CoqtopBlocksTransform(Transform):
                     repl.sendline("Undo {}.".format(len(pairs)))
 
                 dli = nodes.definition_list_item()
-                hide_unless = lambda setting: ['coqtop-hidden'] * (not setting)
                 for sentence, output in pairs:
                     # Use Coqdoq to highlight input
                     in_chunks = highlight_using_coqdoc(sentence)
-                    dli += nodes.term(sentence, '', *in_chunks, classes=hide_unless(opt_input))
+                    dli += nodes.term(sentence, '', *in_chunks, classes=self.block_classes(opt_input))
                     # Parse ANSI sequences to highlight output
                     out_chunks = AnsiColorsParser().colorize_str(output)
-                    dli += nodes.definition(output, *out_chunks, classes=hide_unless(opt_output))
+                    dli += nodes.definition(output, *out_chunks, classes=self.block_classes(opt_output, output))
                 node.clear()
                 node += nodes.definition_list(node.rawsource, dli)
 
