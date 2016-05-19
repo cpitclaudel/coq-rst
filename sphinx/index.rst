@@ -3,7 +3,8 @@
 An experiment in modernizing Coq's manual
 =========================================
 
-**TL;DR: click the links on in the navigation bar (left).**
+.. contents::
+   :local:
 
 Rationale
 ---------
@@ -21,6 +22,9 @@ using ellipses get somewhat hard to read in the presence of nesting:
 .. raw:: html
 
    <p><span style="font-family:monospace">fix </span><span style="font-style:oblique">ident</span><sub>1</sub><span style="font-family:monospace"> </span><span style="font-style:oblique">num</span><span style="font-family:monospace"> with ( </span><span style="font-style:oblique">ident</span><sub>2</sub><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub>2</sub><span style="font-family:monospace"> </span><span style="font-family:monospace">…</span><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub>2</sub><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="font-style:oblique">[</span></span><span style="font-family:monospace">{ struct </span><span style="font-style:oblique">ident</span>′<sub>2</sub><span style="font-family:monospace"> }</span><span style="font-family:monospace"><span style="font-style:oblique">]</span></span><span style="font-family:monospace"> :&nbsp;</span><span style="font-style:oblique">type</span><sub>2</sub><span style="font-family:monospace"> ) … ( </span><span style="font-style:oblique">ident</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> </span><span style="font-family:monospace">…</span><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="font-style:oblique">[</span></span><span style="font-family:monospace">{ struct </span><span style="font-style:oblique">ident</span>′<sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> }</span><span style="font-family:monospace"><span style="font-style:oblique">]</span></span><span style="font-family:monospace"> :&nbsp;</span><span style="font-style:oblique">type</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> )</span></p>
+
+This website
+------------
 
 This website is a small experiment to see whether writing Coq documentation in
 **reStructuredText** with *Sphinx* could make this better. It is **not** an
@@ -62,11 +66,22 @@ This includes:
 - Basic support for typesetting inference rules in a semi-readable way, with
   great rendering in a web browser
 
-Two small sections of Coq's manual, translated to *reStructuredText*.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Three excerpts of Coq's manual, translated to *reStructuredText*.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This gives a flavor of reStructuredText and its Coq-specific extensions (looking
 at page sources), as well as a preview of what results might look like.
+
+- The :doc:`tactics <tactics>` example shows many examples of tactic notations
+  using the new pattern notation, plus examples of talking to ``coqtop``,
+  “remarks”, and “notes” sections, errors and variants, etc.
+- The :doc:`Typing rules of the CIC <cic>` example shows demonstrates math
+  rendering
+- The :doc:`extended pattern matching <extended-pattern-matching>` and
+  :doc:`universe polymorphism <universe-polymorphism>` examples show the result
+  of translating one full chapter of the manual.
+
+Each page has a link to its source; check it out!
 
 I'm a Coq developer, what's in for me?
 --------------------------------------
@@ -83,20 +98,22 @@ Transitioning the manual would make it:
 
 - Easier to extend: reStructuredText directives are relatively simple Python
   functions (contrast with writing LaTeX macros).  For a simple example, see the
-  source of the *CIC typing rules* example below, or the ``coqtop`` directive in
-  the tactics example (it does essentially the same as ``coq-tex``).  Some
+  source of the :doc:`CIC typing rules <cic>` example below, or the ``coqtop`` directive in
+  the :doc:`tactics <tactics>` example (it does essentially the same as ``coq-tex``).  Some
   random ideas that would be relatively easy:
 
   - A “run this example in jsCoq” button.
 
   - Little pop-ups for describing holes in tactic notations.
 
-  - A script that imports documentation for TACTIC EXTEND patterns straight from
-    source comments (*à la* autodoc)
+  - A script that imports documentation for ``TACTIC EXTEND`` patterns straight from
+    source comments (*à la* ``autodoc``)
 
   - Glossaries
 
   - More indices (for example, an index of examples)
+
+  - Linkbacks in the reference list
 
 - Easier to machine-read: it's virtually impossible to reliably extract tactic
   notations, options, and vernacs from the current manual, while it would be
@@ -108,23 +125,24 @@ Welcome to a tiny subset of Coq's documentation!
 ------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    tactics
    cic
+   extended-pattern-matching
+   universe-polymorphism
    glossary
 
-Each page has a link to its source; check it out!
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
+* :index:`cmdindex`
 * :index:`tacindex`
 * :index:`optindex`
 * :index:`exnindex`
 * :ref:`search`
 
 .. No entries yet
-  * :index:`cmdindex`
   * :index:`thmindex`

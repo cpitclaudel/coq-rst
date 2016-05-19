@@ -2,7 +2,7 @@
 Example 1: A subset of Coq's tactic reference
 =============================================
 
-Corresponding page: https://coq.inria.fr/refman/Reference-Manual010.html.
+:Source: https://coq.inria.fr/refman/Reference-Manual010.html.
 
 .. tip::
 
