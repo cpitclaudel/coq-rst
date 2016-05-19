@@ -34,10 +34,14 @@ def htmlize_p(notation):
     with tags.p():
         htmlize(notation)
 
-def string_render(tree):
-    vs = visitors.TacticNotationsToDotsVisitor()
-    vs.visit(tree)
-    return vs.buffer.getvalue()
+def string_render(tree, visitor):
+    visitor.visit(tree)
+    return visitor.buffer.getvalue()
 
 def stringify_with_ellipses(notation):
-    return string_render(parse(substitute(notation)))
+    vs = visitors.TacticNotationsToDotsVisitor()
+    return string_render(parse(substitute(notation)), vs)
+
+def regexpify(notation):
+    vs = visitors.TacticNotationsToRegexpVisitor()
+    return string_render(parse(substitute(notation)), vs)

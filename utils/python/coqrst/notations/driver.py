@@ -4,7 +4,7 @@ import sys
 import dominate
 from dominate import tags
 
-from .main import htmlize_p
+from .main import htmlize_p, regexpify
 
 def main():
     doc = dominate.document(title="Coq Notations")
@@ -60,6 +60,24 @@ def main():
                 tags.hr()
 
     print(doc.render(pretty=False))
+
+def regexps():
+    import os, re
+    for line in sys.stdin:
+        line = line.strip()
+        if "@" not in line and "{" not in line:
+            continue
+        r = re.compile(regexpify(line))
+        print(">>", line)
+        print("-"*80)
+        for dirpath, _, filenames in os.walk("/build/coq-8.5/theories/"):
+            for fn in filenames:
+                if fn.endswith(".v"):
+                    fulln = os.path.join(dirpath, fn)
+                    with open(fulln) as source:
+                        for m in r.finditer(source.read()):
+                            print("{}:{}: {}".format(fulln, m.start(), m.group(0)))
+        print("="*80 + "\n")
 
 if __name__ == '__main__':
     main()

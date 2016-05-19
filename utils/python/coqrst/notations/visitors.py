@@ -1,3 +1,4 @@
+import re
 from io import StringIO
 
 from dominate import tags
@@ -40,7 +41,7 @@ class TacticNotationsToDotsVisitor(TacticNotationsVisitor):
         separator = ctx.ATOM()
         self.visitChildren(ctx)
         if ctx.LGROUP().getText()[1] == "+":
-            spacer = (separator + " " if separator else "")
+            spacer = (separator.getText() + " " if separator else "")
             self.buffer.write(spacer + "…" + spacer)
             self.visitChildren(ctx)
 
@@ -57,3 +58,37 @@ class TacticNotationsToDotsVisitor(TacticNotationsVisitor):
 
     def visitWhitespace(self, ctx:TacticNotationsParser.WhitespaceContext):
         self.buffer.write(" ")
+
+class TacticNotationsToRegexpVisitor(TacticNotationsVisitor):
+    def __init__(self):
+        self.buffer = StringIO()
+
+    def visitRepeat(self, ctx:TacticNotationsParser.RepeatContext):
+        separator = ctx.ATOM()
+        repeat_marker = ctx.LGROUP().getText()[1]
+
+        self.buffer.write("(")
+        self.visitChildren(ctx)
+        self.buffer.write(")")
+
+        if repeat_marker in ["?", "*"]:
+            self.buffer.write("?")
+        elif repeat_marker in ["+", "*"]:
+            self.buffer.write("(")
+            self.buffer.write(r"\s*" + re.escape(separator.getText() if separator else " ") + r"\s*")
+            self.visitChildren(ctx)
+            self.buffer.write(")*")
+
+    def visitCurlies(self, ctx:TacticNotationsParser.CurliesContext):
+        self.buffer.write(r"\{")
+        self.visitChildren(ctx)
+        self.buffer.write(r"\}")
+
+    def visitAtomic(self, ctx:TacticNotationsParser.AtomicContext):
+        self.buffer.write(re.escape(ctx.ATOM().getText()))
+
+    def visitHole(self, ctx:TacticNotationsParser.HoleContext):
+        self.buffer.write("([^();. \n]+)") # FIXME could allow more things
+
+    def visitWhitespace(self, ctx:TacticNotationsParser.WhitespaceContext):
+        self.buffer.write(r"\s+")
