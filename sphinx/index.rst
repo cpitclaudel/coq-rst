@@ -75,11 +75,15 @@ at page sources), as well as a preview of what results might look like.
 - The :doc:`tactics <tactics>` example shows many examples of tactic notations
   using the new pattern notation, plus examples of talking to ``coqtop``,
   “remarks”, and “notes” sections, errors and variants, etc.
+
 - The :doc:`Typing rules of the CIC <cic>` example shows demonstrates math
-  rendering
-- The :doc:`extended pattern matching <extended-pattern-matching>` and
-  :doc:`universe polymorphism <universe-polymorphism>` examples show the result
-  of translating one full chapter of the manual.
+  rendering (see :doc:`tricky-bits` for more examples)
+
+- The :doc:`extended pattern matching <extended-pattern-matching>`,
+  :doc:`universe polymorphism <universe-polymorphism>`, and :doc:`syntax
+  extensions <syntax-extensions>` examples show the result of translating three full
+  chapters of the manual (including formulas, tables, grammars, input-output
+  with coqtop, etc.).
 
 Each page has a link to its source; check it out!
 
@@ -89,7 +93,8 @@ I'm a Coq developer, what's in for me?
 Transitioning the manual would make it:
 
 - Easier to write and maintain: the input format is much simpler than LaTeX, and
-  the proposed (regexp-style) tactic notation format is very simple.
+  the proposed (regexp-style) tactic notation format is very simple. (for tricky
+  cases, we can still fall back to explicit LaTeX).
 
 - Easier to contribute to: the contents are more consistent, and the format is
   easier to learn that the current manual's macros (``\nelist`` etc.), which are
@@ -97,27 +102,32 @@ Transitioning the manual would make it:
   and ``..`` in ``RefMan-tac.tex`` for examples).
 
 - Easier to extend: reStructuredText directives are relatively simple Python
-  functions (contrast with writing LaTeX macros).  For a simple example, see the
-  source of the :doc:`CIC typing rules <cic>` example below, or the ``coqtop`` directive in
-  the :doc:`tactics <tactics>` example (it does essentially the same as ``coq-tex``).  Some
-  random ideas that would be relatively easy:
+  functions (contrast with writing complex LaTeX macros).  For a simple example,
+  see the source of the :doc:`CIC typing rules <cic>` example below, or the
+  ``coqtop`` directive in the :doc:`tactics <tactics>` example (it does
+  essentially the same as ``coq-tex``).  Some random ideas that would be
+  relatively easy:
 
   - A “run this example in jsCoq” button.
 
-  - Little pop-ups for describing holes in tactic notations.
+  - Little pop-ups for describing patterns in tactic notations.
 
   - A script that imports documentation for ``TACTIC EXTEND`` patterns straight from
     source comments (*à la* ``autodoc``)
 
-  - Glossaries
-
-  - More indices (for example, an index of examples)
-
-  - Linkbacks in the reference list
+  - Small improvements: a glossary, new indices (for example, an index of
+    examples), linkbacks in the reference list, hyperlinked grammars, etc.
 
 - Easier to machine-read: it's virtually impossible to reliably extract tactic
   notations, options, and vernacs from the current manual, while it would be
   very easy to so in this format.
+
+- More stable: every time a chapter is added, it currently breaks all links to
+  later parts of the manual; for example, the addition of the “*Universe
+  Polymorphism*” chapter in 8.5 broke links to the “*Micromega*” chapter
+  (``ReferenceMannual024`` became ``ReferenceManual025``; see bug `#4742`_)
+
+  .. _#4742: https://coq.inria.fr/bugs/show_bug.cgi?id=4742
 
 - Prettier and more user-friendly (hopefully!)
 
@@ -131,6 +141,8 @@ Welcome to a tiny subset of Coq's documentation!
    cic
    extended-pattern-matching
    universe-polymorphism
+   syntax-extensions
+   tricky-bits
    glossary
 
 
