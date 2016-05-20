@@ -116,7 +116,6 @@ class CoqObject(ObjectDescription):
             self._add_index_entry(name, target)
             return target
 
-
 class PlainObject(CoqObject):
     def _render_signature(self, signature, signode):
         signode += addnodes.desc_name(signature, signature)
@@ -142,6 +141,11 @@ class VernacObject(NotationObject):
 
     def _name_from_signature(self, signature):
         return notations.stringify_with_ellipses(signature)
+
+class VernacVariantObject(VernacObject):
+    @property
+    def _annotation(self):
+        return "Variant"
 
 class TacticNotationObject(NotationObject):
     subdomain = "tacn"
@@ -459,6 +463,7 @@ class CoqDomain(Domain):
     object_types = {
         # ObjType (= directive type) → (Local name, *xref-roles)
         'cmd': ObjType('cmd', 'cmd'),
+        'cmdv': ObjType('cmdv', 'cmd'),
         'tac': ObjType('tac', 'tac'),
         'tacn': ObjType('tacn', 'tacn'),
         'tacv': ObjType('tacv', 'tacn'),
@@ -473,6 +478,7 @@ class CoqDomain(Domain):
         # there's one directive per object type, but some object types map to
         # the same role.
         'cmd': VernacObject,
+        'cmdv': VernacVariantObject,
         'tac': TacticObject,
         'tacn': TacticNotationObject,
         'tacv': TacticNotationVariantObject,
