@@ -506,7 +506,7 @@ class CoqDomain(Domain):
     initial_data = {
         # Collect everything under a key that we control, since Sphinx adds
         # others, such as “version”
-        'objects' : { # subdomain → docname, objtype, targetid
+        'objects' : { # subdomain → name → docname, objtype, targetid
             'cmd': {},
             'tac': {},
             'tacn': {},
@@ -529,6 +529,16 @@ class CoqDomain(Domain):
                 yield (name, name, objtype, docname, targetid, self.object_types[objtype].attrs['searchprio'])
         for index in self.indices:
             yield (index.name, index.localname, 'index', "coq-" + index.name, '', -1)
+
+    def merge_domaindata(self, docnames, otherdata):
+        DUP = "Duplicate declaration: '{}' also defined in '{}'.\n"
+        for subdomain, their_objects in otherdata['objects'].items():
+            our_objects = self.data['objects'][subdomain]
+            for name, (docname, objtype, targetid) in their_objects.items():
+                if docname in docnames:
+                    if name in our_objects:
+                        self.env.warn(docname, DUP.format(name, our_objects[name][0]))
+                    our_objects[name] = (docname, objtype, targetid)
 
     def resolve_xref(self, env, fromdocname, builder, role, targetname, node, contnode):
         # ‘target’ is the name that was written in the document
@@ -568,4 +578,4 @@ def setup(app):
     subdomains = set(obj.subdomain for obj in CoqDomain.directives.values())
     assert subdomains == set(chain(*(idx.subdomains for idx in CoqDomain.indices)))
     assert subdomains.issubset(CoqDomain.roles.keys())
-    return {'version': '0.1'}   # identifies the version of our extension
+    return {'version': '0.1', "parallel_read_safe": True}
