@@ -9,7 +9,7 @@ from docutils.parsers.rst.roles import code_role #, set_classes
 from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 
 from sphinx import addnodes
-from sphinx.locale import l_
+# from sphinx.locale import l_
 from sphinx.roles import XRefRole
 from sphinx.util.nodes import set_source_info, make_refnode
 from sphinx.directives import ObjectDescription
@@ -189,7 +189,9 @@ def coqdoc_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
     options['language'] = 'Coq'
     return code_role(role, rawtext, text, lineno, inliner, options, content)
     ## Too heavy:
-    ## Forked from code_role to use our custom tokenizer
+    ## Forked from code_role to use our custom tokenizer; this doesn't work for
+    ## snippets though: for example CoqDoc swallows the parentheses around this:
+    ## “(a: A) (b: B)”
     # set_classes(options)
     # classes = ['code', 'coq']
     # code = utils.unescape(text, 1)
@@ -335,7 +337,7 @@ class CoqtopBlocksTransform(Transform):
 
     @staticmethod
     def split_sentences(source):
-        return re.split(r"(?<=\.)\s+", source)
+        return re.split(r"(?<=(?<!\.)\.)\s+", source)
 
     @staticmethod
     def parse_options(options):
@@ -352,7 +354,7 @@ class CoqtopBlocksTransform(Transform):
         elif opt_reset and opt_undo:
             raise ValueError("Inconsistent options for .. coqtop:: ‘undo’ with ‘reset’")
 
-        return opt_undo, opt_reset, opt_input, opt_output
+        return opt_undo, opt_reset, opt_input and not opt_none, opt_output and not opt_none
 
     @staticmethod
     def block_classes(should_show, contents=None):
