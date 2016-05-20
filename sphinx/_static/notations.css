@@ -70,6 +70,10 @@ code, .rst-content tt, .rst-content code {
     font-size: inherit !important;
 }
 
+code {
+    padding: 0 !important;      /* This padding doesn't make sense without a border */
+}
+
 dt > .property {
     margin-right: 0.25em;
 }
@@ -95,7 +99,7 @@ dt > .property {
 .coqtop dd {                    /* Responses */
     padding: 0.5em;
     margin-left: 0 !important;
-    margin-top: 1em !important;
+    margin-top: 0.5em !important;
 }
 
 .coqdoc, .coqtop dl {
@@ -107,7 +111,7 @@ dt > .property {
     white-space: pre;
 }
 
-.coqdoc, .coqtop dt, .coqtop dd {
+.coqdoc, .coqtop dt, .coqtop dd, pre { /* pre added because of production lists */
     font-family: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace !important; /* Copied from RTD theme */
     font-size: 12px !important; /* Copied from RTD theme */
     line-height: 1.5 !important; /* Copied from RTD theme */
@@ -119,7 +123,7 @@ dt > .property {
     display: block !important;
 }
 
-dd.coqtop-hidden { /* Overqualifying for precedence */
+dd.coqtop-hidden, dt.coqtop-hidden { /* Overqualifying for precedence */
     display: none !important;
 }
 
