@@ -1,4 +1,14 @@
-"""Use CoqDoc to highlight Coq snippets"""
+"""
+Use CoqDoc to highlight Coq snippets
+====================================
+
+Pygment's Coq parser isn't the best; instead, use coqdoc to highlight snippets.
+Only works for full, syntactically valid sentences; on shorter snippets, coqdoc
+swallows parts of the input.
+
+Works by reparsing coqdoc's output into the output that Sphinx expects from a
+lexer.
+"""
 
 import os
 from tempfile import mkstemp
@@ -11,6 +21,7 @@ COQDOC_OPTIONS = ['--body-only', '--no-glob', '--no-index', '--no-externals',
                   '-s', '--html', '--stdout', '--utf8']
 
 def coqdoc(coq_code, coqdoc_bin="coqdoc"):
+    """Get the output of coqdoc on coq_code."""
     fd, filename = mkstemp(prefix="coqdoc-", suffix=".v")
     try:
         os.write(fd, coq_code.encode("utf-8"))
@@ -19,10 +30,11 @@ def coqdoc(coq_code, coqdoc_bin="coqdoc"):
     finally:
         os.remove(filename)
 
-def is_string(elem):
-    return isinstance(elem, NavigableString)
+def is_whitespace_string(elem):
+    return isinstance(elem, NavigableString) and elem.strip() == ""
 
 def strip_soup(soup, pred):
+    """Strip elements maching pred from front and tail of soup."""
     while soup.contents and pred(soup.contents[-1]):
         soup.contents.pop()
 
@@ -35,9 +47,10 @@ def strip_soup(soup, pred):
     soup.contents[:] = soup.contents[skip:]
 
 def lex(source):
+    """Convert source into a stream of (css_classes, token_string)."""
     soup = BeautifulSoup(coqdoc(source))
     root = soup.find(class_='code')
-    strip_soup(root, is_string)
+    strip_soup(root, is_whitespace_string)
     for elem in root.children:
         if isinstance(elem, NavigableString):
             yield [], elem
@@ -50,6 +63,7 @@ def lex(source):
             raise ValueError(elem)
 
 def main():
+    """Lex stdin (for testing purposes)"""
     import sys
     for classes, text in lex(sys.stdin.read()):
         print(repr(text) + "\t" ' '.join(classes))

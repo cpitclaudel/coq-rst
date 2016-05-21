@@ -1,3 +1,8 @@
+"""A visitor for ANDTLR notation ASTs, producing plain text with ellipses.
+
+Somewhat-closely approximates the rendering of the original manual.
+"""
+
 from io import StringIO
 
 from .parsing import parse

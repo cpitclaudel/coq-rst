@@ -1,3 +1,8 @@
+"""A visitor for ANDTLR notation ASTs, producing raw HTML.
+
+Uses the dominate package.
+"""
+
 from dominate import tags
 
 from .parsing import parse
@@ -31,19 +36,21 @@ class TacticNotationsToHTMLVisitor(TacticNotationsVisitor):
     def visitWhitespace(self, ctx:TacticNotationsParser.WhitespaceContext):
         tags.span(" ")          # TODO: no need for a <span> here
 
-def html_render(tree):
+def htmlize(notation):
+    """Translate notation to a dominate HTML tree"""
     top = tags.span(_class='notation')
     with top:
-        TacticNotationsToHTMLVisitor().visit(tree)
+        TacticNotationsToHTMLVisitor().visit(parse(notation))
     return top
 
-def htmlize(notation):
-    return html_render(parse(notation))
-
 def htmlize_str(notation):
+    """Translate notation to a raw HTML document"""
     # ‘pretty=True’ introduces spurious spaces
     return htmlize(notation).render(pretty=False)
 
 def htmlize_p(notation):
+    """Like `htmlize`, wrapped in a ‘p’.
+    Does not return: instead, must be run in a dominate context.
+    """
     with tags.p():
         htmlize(notation)

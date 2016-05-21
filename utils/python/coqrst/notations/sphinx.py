@@ -1,3 +1,9 @@
+"""A visitor for ANDTLR notation ASTs, producing Sphinx nodes.
+
+Unlike the HTML visitor, this produces Sphinx-friendly nodes that can be used by
+all backends. If you just want HTML output, use the HTML visitor.
+"""
+
 from .parsing import parse
 from .TacticNotationsParser import TacticNotationsParser
 from .TacticNotationsVisitor import TacticNotationsVisitor
@@ -50,6 +56,7 @@ class TacticNotationsToSphinxVisitor(TacticNotationsVisitor):
         return [nodes.Text(" ")]
 
 def sphinxify(notation):
+    """Translate notation into a Sphinx document tree"""
     vs = TacticNotationsToSphinxVisitor()
     return vs.visit(parse(notation))
 

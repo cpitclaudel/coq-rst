@@ -1,3 +1,5 @@
+"""An experimental visitor for ANDTLR notation ASTs, producing regular expressions."""
+
 import re
 from io import StringIO
 
@@ -40,6 +42,7 @@ class TacticNotationsToRegexpVisitor(TacticNotationsVisitor):
         self.buffer.write(r"\s+")
 
 def regexpify(notation):
+    """Translate notation to a Python regular expression matching it"""
     vs = TacticNotationsToRegexpVisitor()
     vs.visit(parse(notation))
     return vs.buffer.getvalue()

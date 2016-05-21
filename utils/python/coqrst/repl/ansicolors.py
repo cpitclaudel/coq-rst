@@ -1,6 +1,11 @@
-"""A translation the fo color codes that Coq uses.
+"""
+Parse Coq's ANSI output.
+========================
 
-Converted to Python from Coq's terminal.ml. """
+Translated to Python from Coq's terminal.ml.
+"""
+
+# pylint: disable=too-many-return-statements, too-many-branches
 
 def parse_color(style, offset):
     color = style[offset] % 10
@@ -71,6 +76,15 @@ def parse_style(style, offset, acc):
         offset += 1
 
 def parse_ansi(code):
+    """Parse an ansi code into a collection of CSS classes.
+
+    :param code: A sequence of ‘;’-separated ANSI codes.  Do not include the
+                 leading ‘^[[’ or the final ‘m’
+    """
     classes = []
     parse_style([int(c) for c in code.split(';')], 0, classes)
     return ["ansi-" + cls for cls in classes]
+
+if __name__ == '__main__':
+    # As produced by Coq with ‘Check nat.’
+    print(parse_ansi("92;49;22;23;24;27"))
