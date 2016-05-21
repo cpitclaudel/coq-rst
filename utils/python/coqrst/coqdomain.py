@@ -11,7 +11,7 @@ from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 from sphinx import addnodes
 # from sphinx.locale import l_
 from sphinx.roles import XRefRole
-from sphinx.util.nodes import set_source_info, make_refnode
+from sphinx.util.nodes import set_source_info, set_role_source_info, make_refnode
 from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType, Index
 from sphinx.ext.mathbase import MathDirective, displaymath
@@ -456,6 +456,17 @@ class IndexXRefRole(XRefRole):
                 title = index.localname
         return title, target
 
+def GrammarProductionRole(typ, rawtext, text, lineno, inliner, options={}, content=[]):
+    # Loosely inspired from the productionlist directive.
+    # Useful to informally introduce a production, as part of running text
+    env = inliner.document.settings.env
+    idname = 'grammar-token-{}'.format(text)
+    node = nodes.literal(rawtext, text, role=typ.lower(), classes=['inline-grammar-production'], ids=[idname])
+    set_role_source_info(inliner, lineno, node)
+    inliner.document.note_implicit_target(node, node)
+    env.domaindata['std']['objects']['token', text] = env.docname, idname
+    return [node], []
+
 class CoqDomain(Domain):
     """A domain to document Coq code."""
 
@@ -569,6 +580,7 @@ class CoqDomain(Domain):
 
 def setup(app):
     app.add_domain(CoqDomain)
+    app.add_role("production", GrammarProductionRole)
     app.add_directive("coqtop", CoqtopDirective)
     app.add_directive("coqdoc", CoqdocDirective)
     app.add_directive("example", ExampleDirective)
