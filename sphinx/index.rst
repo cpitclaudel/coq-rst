@@ -35,14 +35,16 @@ A new syntax and rendering for tactic notations with repeats
 
 The proposal is to write the patterns above like this::
 
-    pattern {+, @term {? at {+ @num}}}
-    fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
+   pattern {+, @term {? at {+ @num}}}
+   fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}
 
 and render them like this:
 
-:notation:`pattern {+, @term {? at {+ @num}}}`
+   :notation:`pattern {+, @term {? at {+ @num}}}`
 
-:notation:`fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}`
+   :notation:`fix @ident @num with {+ (@ident {+ @binder} {? {struct @ident'}} : @type)}`
+
+(as a start, holes are currently hyperlinked to the corresponding grammar entries, when available.)
 
 A Python version of ``coq-tex``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,19 +54,37 @@ to include Coq's responses to certain queries. The queries are
 syntax-highlighted by sending them to Coqdoc and parsing the result, and the
 results are syntax-highlighted by parsing Coq 8.5's ANSI color codes.
 
+.. coqtop:: all
+
+   Check plus.
+
 A partial Coq *domain* for Sphinx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This includes:
 
-- A parser and renderer for the simple notation language above
+- A parser and renderer for the simple notation language above:
+
+  :notation:`pattern {+, @term {? at {+ @num}}}`
 
 - Coq-specific directives (directives are custom *reStructuredText* blocks),
   covering examples of interaction with ``coqtop``, documentation of tactic
-  notations, variants, errors, options, and examples
+  notations, variants, errors, options, and examples:
+
+  .. cmd:: Implicit Types {+ @ident} : @type.
 
 - Basic support for typesetting inference rules in a semi-readable way, with
-  great rendering in a web browser
+  great rendering in a web browser:
+
+  .. include:: preamble.rst
+
+  .. inference:: Prod-Type
+
+     \WTEG{T}{\Type(i)}
+     \WTE{\Gamma::(x:T)}{U}{\Type(i)}
+     --------------------------------
+     \WTEG{\forall~x:T,U}{\Type(i)}
+
 
 Three excerpts of Coq's manual, translated to *reStructuredText*.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,7 +114,8 @@ Transitioning the manual would make it:
 
 - Easier to write and maintain: the input format is much simpler than LaTeX, and
   the proposed (regexp-style) tactic notation format is very simple. (for tricky
-  cases, we can still fall back to explicit LaTeX).
+  cases, we can still fall back to explicit LaTeX). Coq-specific constructs make
+  many things easier to write (such as grammars) and hyperlink.
 
 - Easier to contribute to: the contents are more consistent, and the format is
   easier to learn that the current manual's macros (``\nelist`` etc.), which are
@@ -110,17 +131,23 @@ Transitioning the manual would make it:
 
   - A “run this example in jsCoq” button.
 
-  - Little pop-ups for describing patterns in tactic notations.
+  - Little pop-ups for describing patterns in tactic notations (currently. they
+    are just hyperlinked to the corresponding grammar entries).
 
   - A script that imports documentation for ``TACTIC EXTEND`` patterns straight from
     source comments (*à la* ``autodoc``)
 
+  - A link in each error pointing to the corresponding documentation
+
   - Small improvements: a glossary, new indices (for example, an index of
-    examples), linkbacks in the reference list, hyperlinked grammars, etc.
+    examples), linkbacks in the reference list, etc.
 
 - Easier to machine-read: it's virtually impossible to reliably extract tactic
   notations, options, and vernacs from the current manual, while it would be
   very easy to so in this format.
+
+- Easier to transition: if we prefer another format later, it's much easier to
+  transition to it from reStructuredText.
 
 - More stable: every time a chapter is added, it currently breaks all links to
   later parts of the manual; for example, the addition of the “*Universe
@@ -143,8 +170,8 @@ Welcome to a tiny subset of Coq's documentation!
    universe-polymorphism
    syntax-extensions
    tricky-bits
+   gallina-specification-language
    glossary
-
 
 Indices and tables
 ==================

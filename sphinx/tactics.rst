@@ -3,6 +3,7 @@ Example 1: A subset of Coq's tactic reference
 =============================================
 
 :Source: https://coq.inria.fr/refman/Reference-Manual010.html.
+:Converted by: Clément Pit-Claudel
 
 .. tip::
 
@@ -15,7 +16,7 @@ Example 1: A subset of Coq's tactic reference
    - :n:`{* any number of times}` (an optional, repeatable block)
 
    The bottom symbol indicates the separator to use between repeated blocks.
-   For example, ``rewrite H``, ``rewrite → H``, and ``rewrite H1, H2`` are all
+   For example, “``rewrite H``”, “``rewrite → H``”, and “``rewrite H1, H2``” are all
    matches for :n:`rewrite {? →} {+, term}`.
 
 .. note::

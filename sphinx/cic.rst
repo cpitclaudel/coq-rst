@@ -3,12 +3,13 @@ Example 2: Typing rules of the CIC
 ==================================
 
 :Source: https://coq.inria.fr/refman/Reference-Manual006.html#Typing-rules
+:Converted by: Clément Pit-Claudel
+
+.. include:: preamble.rst
 
 A term :math:`t` is well typed in a global environment :math:`E` iff there exists a
 local context :math:`\Gamma` and a term :math:`T` such that the judgment :math:`\WTEG{t}{T}` can
 be derived from the following rules.
-
-.. include:: preamble.rst
 
 .. inference:: W-Empty
 

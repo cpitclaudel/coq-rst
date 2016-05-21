@@ -3,7 +3,7 @@
 ========================================================
 
 :Source: https://coq.inria.fr/refman/Reference-Manual014.html
-:Converted by: C. Pit-Claudel
+:Converted by: Clément Pit-Claudel
 
 In this chapter, we introduce advanced commands to modify the way Coq
 parses and prints objects, i.e. the translations between the concrete

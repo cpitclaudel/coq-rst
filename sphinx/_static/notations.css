@@ -123,12 +123,16 @@ dt > .property {
     display: block !important;
 }
 
-dd.coqtop-hidden, dt.coqtop-hidden { /* Overqualifying for precedence */
+.coqtop.coqtop-hidden, dd.coqtop-hidden, dt.coqtop-hidden { /* Overqualifying for precedence */
     display: none !important;
 }
 
 .math-preamble {
     display: none;
+}
+
+.inline-grammar-production {
+    font-weight: bold;
 }
 
 /* Pygments for Coq is confused by ‘…’ */

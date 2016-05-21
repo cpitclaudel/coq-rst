@@ -101,7 +101,7 @@ primary_domain = 'coq'
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
-highlight_language = 'Coq'
+highlight_language = 'text'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -110,8 +110,10 @@ highlight_language = 'Coq'
 #keep_warnings = False
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True
+todo_include_todos = False
 
+# Extra warnings
+nitpicky = True
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -119,6 +121,7 @@ todo_include_todos = True
 # a list of builtin themes.
 html_theme = 'sphinx_rtd_theme'
 # html_theme = 'agogo' # Not bad
+# html_theme = 'alabaster' # Not bad
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

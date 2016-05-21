@@ -2,9 +2,9 @@
  Example 3: Extended pattern-matching (full text)
 ==================================================
 
+:Source: https://coq.inria.fr/distrib/current/refman/Reference-Manual020.html
 :Authors: Cristina Cornes and Hugo Herbelin
 :Converted by: Clément Pit-Claudel
-:Source: https://coq.inria.fr/distrib/current/refman/Reference-Manual020.html
 
 .. contents::
    :local:
