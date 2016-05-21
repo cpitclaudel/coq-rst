@@ -387,6 +387,8 @@ class CoqtopBlocksTransform(Transform):
                     out_chunks = AnsiColorsParser().colorize_str(output)
                     dli += nodes.definition(output, *out_chunks, classes=self.block_classes(opt_output, output))
                 node.clear()
+                node['classes'].extend(self.block_classes(opt_input or opt_output))
+                node += nodes.inline('', '', classes=['coqtop-reset'] * opt_reset)
                 node += nodes.definition_list(node.rawsource, dli)
 
     def merge_consecutive_coqtop_blocks(self):
@@ -516,7 +518,7 @@ class CoqDomain(Domain):
         'ltac': LtacRole,
         'n': NotationRole,
         'g': GallinaRole,
-        'l': LtacRole,
+        'l': LtacRole, #FIXME unused?
     }
 
     indices = [CoqVernacIndex, CoqTacticIndex, CoqOptionIndex, CoqGallinaIndex, CoqExceptionIndex]
