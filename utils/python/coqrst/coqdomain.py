@@ -16,13 +16,13 @@ from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType, Index
 from sphinx.ext.mathbase import MathDirective, displaymath
 
-from . import coqdoc, notations
 from .repl import CoqTop, ansicolors
+from . import coqdoc
+from .notations.sphinx import sphinxify
+from .notations.plain import stringify_with_ellipses
 
 def parse_notation(notation, source, line, rawtext=None):
-    if ":class" in notations.htmlize_str(notation):
-        raise ValueError()
-    node = nodes.raw(rawtext or notation, notations.htmlize_str(notation), format="html")
+    node = nodes.inline(rawtext or notation, '', *sphinxify(notation), classes=['notation'])
     node.source, node.line = source, line
     return node
 
@@ -140,7 +140,7 @@ class VernacObject(NotationObject):
         return "Command"
 
     def _name_from_signature(self, signature):
-        return notations.stringify_with_ellipses(signature)
+        return stringify_with_ellipses(signature)
 
 class VernacVariantObject(VernacObject):
     @property
@@ -167,7 +167,7 @@ class OptionObject(NotationObject):
         return "Option"
 
     def _name_from_signature(self, signature):
-        return notations.stringify_with_ellipses(signature)
+        return stringify_with_ellipses(signature)
 
 # Uses “exn” since “err” already is a CSS class added by “writer_aux”.
 class ExceptionObject(NotationObject):
@@ -178,7 +178,7 @@ class ExceptionObject(NotationObject):
         return "Error"
 
     def _name_from_signature(self, signature):
-        return notations.stringify_with_ellipses(signature)
+        return stringify_with_ellipses(signature)
 
 def NotationRole(role, rawtext, text, lineno, inliner, options={}, content=[]):
     notation = utils.unescape(text, 1)
