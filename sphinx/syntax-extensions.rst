@@ -65,8 +65,8 @@ expression (see 12.1.7), explicit precedences and associativity rules
 have to be given.
 
 
-12.1.2 Precedences and associativity
-------------------------------------
+Precedences and associativity
+-----------------------------
 
 Mixing different symbolic notations in a same text may cause serious
 parsing ambiguity. To deal with the ambiguity of notations, Coq uses
@@ -159,8 +159,8 @@ correct definition is
 
 See the next section for more about factorization.
 
-12.1.4 Simple factorization rules
----------------------------------
+Simple factorization rules
+--------------------------
 
 Coq extensible parsing is performed by *Camlp5* which is essentially a
 LL1 parser. Hence, some care has to be taken not to hide already
@@ -351,8 +351,8 @@ on Figure 12.1. Here are examples:
      end
    where "n + m" := (plus n m).
 
-12.1.9 Displaying informations about notations
-----------------------------------------------
+Displaying informations about notations
+---------------------------------------
 
 .. opt:: Printing Notations
 
@@ -981,10 +981,10 @@ Tactic notations allow to customize the syntax of the tactics of the
 tactic language [#tacn]_. Tactic notations obey the following syntax:
 
 .. productionlist:: coq
-   sentence             : [Local] Tactic Notation [tactic_level] [prod_item … prod_item] := tactic.
-   prod_item            : `string` | tactic_argument_type(`ident`)
+   sentence             : [Local] Tactic Notation [`tactic_level`] [`prod_item` … `prod_item`] := `tactic`.
+   prod_item            : `string` | `tactic_argument_type`(`ident`)
    tactic_level         : (at level `natural`)
-   tactic_argument_type : ident | simple_intropattern | `reference``
+   tactic_argument_type : ident | simple_intropattern | reference
                         : | hyp | hyp_list | ne_hyp_list
                         : | constr | uconstr | constr_list | ne_constr_list
                         : | integer | integer_list | ne_integer_list
