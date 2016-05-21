@@ -1,13 +1,14 @@
-..
+===========================================
+ An experiment in modernizing Coq's manual
+===========================================
 
-An experiment in modernizing Coq's manual
-=========================================
+.. include:: preamble.rst
 
 .. contents::
    :local:
 
 Rationale
----------
+=========
 
 Coq's documentation is a rather complex LaTeX document, making it hard to get
 good HTML rendering (though the excellent *HeVeA* is doing an impressive job!),
@@ -24,14 +25,14 @@ using ellipses get somewhat hard to read in the presence of nesting:
    <p><span style="font-family:monospace">fix </span><span style="font-style:oblique">ident</span><sub>1</sub><span style="font-family:monospace"> </span><span style="font-style:oblique">num</span><span style="font-family:monospace"> with ( </span><span style="font-style:oblique">ident</span><sub>2</sub><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub>2</sub><span style="font-family:monospace"> </span><span style="font-family:monospace">…</span><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub>2</sub><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="font-style:oblique">[</span></span><span style="font-family:monospace">{ struct </span><span style="font-style:oblique">ident</span>′<sub>2</sub><span style="font-family:monospace"> }</span><span style="font-family:monospace"><span style="font-style:oblique">]</span></span><span style="font-family:monospace"> :&nbsp;</span><span style="font-style:oblique">type</span><sub>2</sub><span style="font-family:monospace"> ) … ( </span><span style="font-style:oblique">ident</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> </span><span style="font-family:monospace">…</span><span style="font-family:monospace"> </span><span style="font-style:oblique">binder</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="font-style:oblique">[</span></span><span style="font-family:monospace">{ struct </span><span style="font-style:oblique">ident</span>′<sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> }</span><span style="font-family:monospace"><span style="font-style:oblique">]</span></span><span style="font-family:monospace"> :&nbsp;</span><span style="font-style:oblique">type</span><sub><span style="font-style:italic">n</span></sub><span style="font-family:monospace"> )</span></p>
 
 This website
-------------
+============
 
 This website is a small experiment to see whether writing Coq documentation in
 **reStructuredText** with *Sphinx* could make this better. It is **not** an
 alternative to *CoqDoc*. This project includes:
 
 A new syntax and rendering for tactic notations with repeats
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 
 The proposal is to write the patterns above like this::
 
@@ -47,7 +48,7 @@ and render them like this:
 (as a start, holes are currently hyperlinked to the corresponding grammar entries, when available.)
 
 A Python version of ``coq-tex``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 Just like ``coq-tex``, but for Sphinx: it augments the AST of a Sphinx document
 to include Coq's responses to certain queries. The queries are
@@ -59,7 +60,7 @@ results are syntax-highlighted by parsing Coq 8.5's ANSI color codes.
    Check plus.
 
 A partial Coq *domain* for Sphinx
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 This includes:
 
@@ -76,8 +77,6 @@ This includes:
 - Basic support for typesetting inference rules in a semi-readable way, with
   great rendering in a web browser:
 
-  .. include:: preamble.rst
-
   .. inference:: Prod-Type
 
      \WTEG{T}{\Type(i)}
@@ -87,7 +86,7 @@ This includes:
 
 
 Three excerpts of Coq's manual, translated to *reStructuredText*.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------------------------------
 
 This gives a flavor of reStructuredText and its Coq-specific extensions (looking
 at page sources), as well as a preview of what results might look like.
@@ -108,7 +107,7 @@ at page sources), as well as a preview of what results might look like.
 Each page has a link to its source; check it out!
 
 I'm a Coq developer, what's in for me?
---------------------------------------
+======================================
 
 Transitioning the manual would make it:
 
@@ -159,7 +158,7 @@ Transitioning the manual would make it:
 - Prettier and more user-friendly (hopefully!)
 
 Welcome to a tiny subset of Coq's documentation!
-------------------------------------------------
+================================================
 
 .. toctree::
    :maxdepth: 1
