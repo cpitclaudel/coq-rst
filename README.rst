@@ -34,10 +34,10 @@ Required on every build
 +++++++++++++++++++++++
 
 - Python 3
-- Sphinx and a few sphinx extensions::
-- ``pexpect``, a REPL-driving library::
 - The ANTLR runtime
-- (optional) The ``dominate`` library for rendering notations to raw HTML (the Sphinx renderer doesn't depend on this)
+- Sphinx and a few sphinx extensions
+- “Pexpect”, a REPL-driving library
+- (optional) The “dominate” library for rendering notations to raw HTML (the Sphinx renderer doesn't depend on this)
 
 Quick setup::
 
