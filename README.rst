@@ -38,6 +38,7 @@ Required on every build
 - Sphinx and a few sphinx extensions
 - “Pexpect”, a REPL-driving library
 - (optional) The “dominate” library for rendering notations to raw HTML (the Sphinx renderer doesn't depend on this)
+- (to build the PDF) xelatex
 
 Quick setup::
 
@@ -58,6 +59,7 @@ From the root folder::
 … or from the sphinx folder::
 
    make clean html
+   make clean xelatexpdf
 
 Editing the sources
 -------------------
