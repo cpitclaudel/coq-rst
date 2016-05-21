@@ -479,6 +479,15 @@ class CoqtopBlocksTransform(Transform):
         else:
             return []
 
+    @staticmethod
+    def make_rawsource(pairs, opt_input, opt_output):
+        blocks = []
+        for sentence, output in pairs:
+            output = AnsiColorsParser.COLOR_PATTERN.sub("", output).strip()
+            blocks.extend([sentence] * opt_input)
+            blocks.extend([output + "\n"] * (opt_output and output != ""))
+        return '\n'.join(blocks)
+
     def add_coqtop_output(self):
         """Add coqtop's responses to a Sphinx AST
 
@@ -506,6 +515,7 @@ class CoqtopBlocksTransform(Transform):
                     out_chunks = AnsiColorsParser().colorize_str(output)
                     dli += nodes.definition(output, *out_chunks, classes=self.block_classes(opt_output, output))
                 node.clear()
+                node.rawsource = self.make_rawsource(pairs, opt_input, opt_output)
                 node['classes'].extend(self.block_classes(opt_input or opt_output))
                 node += nodes.inline('', '', classes=['coqtop-reset'] * opt_reset)
                 node += nodes.definition_list(node.rawsource, dli)

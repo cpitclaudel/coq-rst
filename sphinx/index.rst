@@ -172,6 +172,8 @@ Welcome to a tiny subset of Coq's documentation!
    gallina-specification-language
    glossary
 
+There's also an work-in-progress version of a `PDF manual <http://web.mit.edu/cpitcla/www/coq-rst/Coq85.pdf>`_.
+
 Indices and tables
 ==================
 
