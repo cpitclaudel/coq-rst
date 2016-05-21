@@ -112,8 +112,8 @@ highlight_language = 'text'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-# Extra warnings
-nitpicky = True
+# Extra warnings, including undefined references
+nitpicky = False
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -229,11 +229,30 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     # https://www.topbug.net/blog/2015/12/10/a-collection-of-issues-about-the-latex-output-in-sphinx-and-the-solutions/
-    'preamble': r'\input{/build/coq/doc/common/macros}',
-
     # Latex figure (float) alignment
     #'figure_align': 'htbp',
 }
+
+###########################
+# Set things up for XeTeX #
+###########################
+latex_elements = {
+    'babel': '',
+    'fontenc': '',
+    'inputenc': '',
+    'utf8extra': '',
+    'cmappkg': '',
+}
+
+from sphinx.builders.latex import LaTeXBuilder
+LaTeXBuilder.usepackages.append(("polyglossia", []))
+LaTeXBuilder.usepackages.append(("unicode-math", []))
+
+########
+# done #
+########
+
+latex_additional_files = []
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,

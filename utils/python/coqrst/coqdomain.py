@@ -277,25 +277,31 @@ class CoqtopDirective(Directive):
     final_argument_whitespace = True
 
     def run(self):
+        # Uses a ‘container’ instead of a ‘literal_block’ to disable
+        # Pygments-based post-processing (we could also set rawsource to '')
         content = '\n'.join(self.content)
         options = self.arguments[0].split() if self.arguments else ['in']
         if 'all' in options:
-            options = list(set(options + ['in', 'out']))
-        node = nodes.container(content, coqtop_options = options, classes=['coqtop', 'literal-block'])
+            options.extend(['in', 'out'])
+        node = nodes.container(content, coqtop_options = list(set(options)),
+                               classes=['coqtop', 'literal-block'])
         self.add_name(node)
         return [node]
 
 class CoqdocDirective(Directive):
     """A reST directive to display Coqtop-formatted source code"""
+    # TODO implement this as a Pygments highlighter?
     has_content = True
     required_arguments = 0
     optional_arguments = 0
     final_argument_whitespace = True
 
     def run(self):
+        # Uses a ‘container’ instead of a ‘literal_block’ to disable
+        # Pygments-based post-processing (we could also set rawsource to '')
         content = '\n'.join(self.content)
-        node = nodes.inline(content, '', *highlight_using_coqdoc(content), classes=['coqdoc'])
-        wrapper = nodes.container(content, node, classes=['literal-block'])
+        node = nodes.inline(content, '', *highlight_using_coqdoc(content))
+        wrapper = nodes.container(content, node, classes=['coqdoc', 'literal-block'])
         return [wrapper]
 
 class ExampleDirective(BaseAdmonition):
@@ -357,7 +363,8 @@ class InferenceDirective(Directive):
 
     @staticmethod
     def prepare_latex_operand(op):
-        return r'\hspace{3em}'.join(op.strip().splitlines())
+        # TODO: Could use a fancier inference class in LaTeX
+        return '%\n\\hspace{3em}%\n'.join(op.strip().splitlines())
 
     def prepare_latex(self, content):
         parts = re.split('^ *----+ *$', content, flags=re.MULTILINE)
@@ -365,7 +372,7 @@ class InferenceDirective(Directive):
             raise self.error('Expected two parts in inference::, separated by a rule (----).')
 
         top, bottom = tuple(InferenceDirective.prepare_latex_operand(p) for p in parts)
-        return "\\frac{" + top + "}{" + bottom + "}"
+        return "%\n".join(("\\frac{", top, "}{", bottom, "}"))
 
     def run(self):
         self.assert_has_content()
@@ -436,7 +443,7 @@ class CoqtopBlocksTransform(Transform):
 
     @staticmethod
     def is_coqtop_block(node):
-        return ('coqtop_options' in node)
+        return isinstance(node, nodes.Element) and 'coqtop_options' in node
 
     @staticmethod
     def split_sentences(source):
@@ -710,6 +717,26 @@ class CoqDomain(Domain):
                 if docname == docname_to_clear:
                     del subdomain_objects[name]
 
+def is_coqtop_or_coqdoc_block(node):
+    return (isinstance(node, nodes.Element) and
+       ('coqtop' in node['classes'] or 'coqdoc' in node['classes']))
+
+def simplify_source_code_blocks_for_latex(app, doctree, fromdocname): # pylint: disable=unused-argument
+    """Simplify coqdoc and coqtop blocks.
+
+    In HTML mode, this does nothing; in other formats, such as LaTeX, it
+    replaces coqdoc and coqtop blocks by plain text sources, which will use
+    pygments if available.  This prevents the LaTeX builder from getting
+    confused.
+    """
+
+    is_html = app.builder.tags.has("html")
+    for node in doctree.traverse(is_coqtop_or_coqdoc_block):
+        if is_html:
+            node.rawsource = '' # Prevent pygments from kicking in
+        else:
+            node.replace_self(nodes.literal_block(node.rawsource, node.rawsource, language="Coq"))
+
 def setup(app):
     """Register the Coq domain"""
 
@@ -727,6 +754,7 @@ def setup(app):
     app.add_directive("inference", InferenceDirective)
     app.add_directive("preamble", PreambleDirective)
     app.add_transform(CoqtopBlocksTransform)
+    app.connect('doctree-resolved', simplify_source_code_blocks_for_latex)
 
     # Add extra styles
     app.add_stylesheet("hint.min.css")

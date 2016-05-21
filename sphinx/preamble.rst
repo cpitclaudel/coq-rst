@@ -1,6 +1,10 @@
-.. preamble::
+.. only:: html
 
-   \def\ensuremath#1{#1}
+   .. preamble::
+
+      \def\ensuremath#1{#1}
+
+.. preamble::
 
    \newcommand{\WF}[2]{\ensuremath{{\cal W\!F}(#1)[#2]}}
    \newcommand{\WFE}[1]{\WF{E}{#1}}

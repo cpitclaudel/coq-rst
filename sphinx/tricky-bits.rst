@@ -11,7 +11,9 @@ Math
 
 It's also easy to define special environments when needed:
 
-.. include:: preamble.rst
+.. only:: html
+
+   .. include:: preamble.rst
 
 .. inference:: Prod-Type
 
