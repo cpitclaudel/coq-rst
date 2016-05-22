@@ -20,10 +20,14 @@ from bs4.element import NavigableString
 COQDOC_OPTIONS = ['--body-only', '--no-glob', '--no-index', '--no-externals',
                   '-s', '--html', '--stdout', '--utf8']
 
+COQDOC_SYMBOLS = ["->", "<-", "<->", "=>", "<=", ">=", "<>", "~", "/\\", "\\/", "|-", "*"]
+COQDOC_HEADER = "".join("(** remove printing {} *)".format(s) for s in COQDOC_SYMBOLS)
+
 def coqdoc(coq_code, coqdoc_bin="coqdoc"):
     """Get the output of coqdoc on coq_code."""
     fd, filename = mkstemp(prefix="coqdoc-", suffix=".v")
     try:
+        os.write(fd, COQDOC_HEADER.encode("utf-8"))
         os.write(fd, coq_code.encode("utf-8"))
         os.close(fd)
         return check_output([coqdoc_bin] + COQDOC_OPTIONS + [filename], timeout = 2).decode("utf-8")
