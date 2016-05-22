@@ -240,6 +240,7 @@ latex_elements = {
 from sphinx.builders.latex import LaTeXBuilder
 LaTeXBuilder.usepackages.append(("polyglossia", []))
 LaTeXBuilder.usepackages.append(("unicode-math", []))
+LaTeXBuilder.usepackages.append(("microtype", []))
 
 ########
 # done #

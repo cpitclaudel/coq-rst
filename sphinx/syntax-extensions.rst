@@ -746,7 +746,7 @@ Binding types of arguments to an interpretation scope
 
    When an interpretation scope is naturally associated to a type (e.g.  the
    scope of operations on the natural numbers), it may be convenient to bind it
-   to this type. When a scope scope is bound to a type type, any new function
+   to this type. When a scope ``scope`` is bound to a type type, any new function
    defined later on gets its arguments of type type interpreted by default in
    scope scope (this default behavior can however be overwritten by explicitly
    using the command ``Arguments``).
@@ -798,7 +798,7 @@ declared or defined constant.
 Interpretation scopes used in the standard library of Coq
 ---------------------------------------------------------
 
-We give an overview of the scopes used in the standard library ofCoq.
+We give an overview of the scopes used in the standard library of Coq.
 For a complete list of notations in each scope, use the commands Print
 Scopes or Print Scope scope.
 
