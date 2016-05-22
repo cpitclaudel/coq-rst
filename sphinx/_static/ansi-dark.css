@@ -30,105 +30,104 @@
     text-decoration: none;
 }
 
-
-.ansi-fg-black {
-    color: #babdb6;
+.ansi-black {
+    color: #000000;
 }
 
 .ansi-fg-red {
-    color: #a40000;
+    color: #b21717;
 }
 
 .ansi-fg-green {
-    color: #4e9a06;
+    color: #17b217;
 }
 
 .ansi-fg-yellow {
-    color: #ce5c00;
+    color: #b26717;
 }
 
 .ansi-fg-blue {
-    color: #204a87;
+    color: #1717b2;
 }
 
 .ansi-fg-magenta {
-    color: #5c3566;
+    color: #b217b2;
 }
 
 .ansi-fg-cyan {
-    color: #8f5902;
+    color: #17b2b2;
 }
 
 .ansi-fg-white {
-    color: #2e3436;
-}
-
-.ansi-fg-light-black {
-    color: #d3d7cf;
-}
-
-.ansi-fg-light-red {
-    color: #cc0000;
-}
-
-.ansi-fg-light-green {
-    color: #346604;             /* From tango.el */
-}
-
-.ansi-fg-light-yellow {
-    color: #f57900;
-}
-
-.ansi-fg-light-blue {
-    color: #3465a4;
-}
-
-.ansi-fg-light-magenta {
-    color: #75507b;
-}
-
-.ansi-fg-light-cyan {
-    color: #c14d11;
-}
-
-.ansi-fg-light-white {
-    color: #555753;
+    color: #b2b2b2;
 }
 
 .ansi-fg-default {
-    color: #eeeeec;
+    color: #404040;
+}
+
+.ansi-fg-light-black {
+    color: #686868;
+}
+
+.ansi-fg-light-red {
+    color: #ff5454;
+}
+
+.ansi-fg-light-green {
+    color: #54ff54;
+}
+
+.ansi-fg-light-yellow {
+    color: #ffff54;
+}
+
+.ansi-fg-light-blue {
+    color: #5454ff;
+}
+
+.ansi-fg-light-magenta {
+    color: #ff54ff;
+}
+
+.ansi-fg-light-cyan {
+    color: #54ffff;
+}
+
+.ansi-fg-light-white {
+    color: #ffffff;
 }
 
 .ansi-bg-black {
-    background-color: #babdb6;
+    background-color: #000000;
 }
 
 .ansi-bg-red {
-    background-color: #a40000;
+    background-color: #b21717;
 }
 
 .ansi-bg-green {
-    background-color: #4e9a06;
+    background-color: #17b217;
 }
 
 .ansi-bg-yellow {
-    background-color: #ce5c00;
+    background-color: #b26717;
 }
 
 .ansi-bg-blue {
-    background-color: #204a87;
+    background-color: #1717b2;
 }
 
 .ansi-bg-magenta {
-    background-color: #5c3566;
+    background-color: #b217b2;
 }
 
 .ansi-bg-cyan {
-    background-color: #8f5902;
+    background-color: #17b2b2;
 }
 
 .ansi-bg-white {
-    background-color: #2e3436;
+    background-color: #b2b2b2;
 }
 
 .ansi-bg-default {

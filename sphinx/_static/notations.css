@@ -73,11 +73,11 @@
 /************************/
 
 .coqtop dd, .ansi-bg-default {
-    background: #2e3436 !important;
+    background: #eeeeee !important;
 }
 
 .coqtop dd, .ansi-fg-default {
-    color: #eeeeec !important;
+    color: #2e3436 !important;
 }
 
 .coqtop dt {                    /* Questions */
