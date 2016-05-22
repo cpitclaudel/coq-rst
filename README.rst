@@ -48,6 +48,7 @@ Required for pre-processing
 +++++++++++++++++++++++++++
 
 - ANTLR (a parser generator)
+- FontForge (to generate custom fonts for subscripts and superscripts)
 
 Building
 ~~~~~~~~
