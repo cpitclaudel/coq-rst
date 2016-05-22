@@ -484,8 +484,10 @@ class CoqtopBlocksTransform(Transform):
         blocks = []
         for sentence, output in pairs:
             output = AnsiColorsParser.COLOR_PATTERN.sub("", output).strip()
-            blocks.extend([sentence] * opt_input)
-            blocks.extend([output + "\n"] * (opt_output and output != ""))
+            if opt_input:
+                blocks.append(sentence)
+            if output and opt_output:
+                blocks.append(re.sub("^", "    ", output, flags=re.MULTILINE) + "\n")
         return '\n'.join(blocks)
 
     def add_coqtop_output(self):
