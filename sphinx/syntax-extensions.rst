@@ -1012,17 +1012,6 @@ tactic language [#tacn]_. Tactic notations obey the following syntax:
    following table. The last command gives examples of tactics which use
    the corresponding kind of argument.
 
-   Tactic argument type parsed as interpreted as as in tactic ident
-   identifier a user-given name intro simple_intropattern intro_pattern
-   an intro_pattern intros hyp identifier an hypothesis defined in
-   context clear reference qualified identifier a global reference of
-   term unfold constr term a term exact uconstr term an untyped term
-   refine integer integer an integer int_or_var identifier or integer an
-   integer do tactic tactic at level 5 a tactic tacticn tactic at level n
-   a tactic entry_list list of entry a list of how entry is interpreted
-   ne_entry_list non-empty list of entry a list of how entry is
-   interpreted
-
    .. list-table::
       :header-rows: 1
 

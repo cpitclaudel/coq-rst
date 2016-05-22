@@ -124,6 +124,12 @@
 /* Overrides */
 /*************/
 
+.rst-content table.docutils td, .rst-content table.docutils th {
+    padding: 8px; /* Reduce horizontal padding */
+    border-left: none;
+    border-right: none;
+}
+
 /* We can't display nested blocks otherwise */
 code, .rst-content tt, .rst-content code {
     background: transparent !important;
