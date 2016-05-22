@@ -520,6 +520,13 @@ class CoqtopBlocksTransform(Transform):
                 node += nodes.inline('', '', classes=['coqtop-reset'] * opt_reset)
                 node += nodes.definition_list(node.rawsource, dli)
 
+    @staticmethod
+    def merge_coqtop_classes(kept_node, discarded_node):
+        discarded_classes = discarded_node['classes']
+        if not 'coqtop-hidden' in discarded_classes:
+            kept_node['classes'] = [c for c in kept_node['classes']
+                                    if c != 'coqtop-hidden']
+
     def merge_consecutive_coqtop_blocks(self):
         """Merge consecutive divs wrapping lists of Coq sentences; keep ‘dl’s separate."""
         for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
@@ -527,6 +534,7 @@ class CoqtopBlocksTransform(Transform):
                 for sibling in node.traverse(include_self=False, descend=False,
                                              siblings=True, ascend=False):
                     if CoqtopBlocksTransform.is_coqtop_block(sibling):
+                        self.merge_coqtop_classes(node, sibling)
                         node.extend(sibling.children)
                         node.parent.remove(sibling)
                         sibling.parent = None

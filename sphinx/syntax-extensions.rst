@@ -1064,7 +1064,7 @@ tactic language [#tacn]_. Tactic notations obey the following syntax:
       * - ``integer``
         - integer
         - an integer
-        -  
+        -
 
       * - ``int_or_var``
         - identifier or integer
@@ -1074,50 +1074,22 @@ tactic language [#tacn]_. Tactic notations obey the following syntax:
       * - ``tactic``
         - tactic at level 5
         - a tactic
-        -  
+        -
 
       * - ``tacticn``
         - tactic at level n
         - a tactic
-        -  
+        -
 
       * - *entry*\ ``_list``
         - list of *entry*
         - a list of how *entry* is interpreted
-        -  
+        -
 
       * - ``ne_``\ *entry*\ ``_list``
         - non-empty list of *entry*
         - a list of how *entry* is interpreted
-        -  
-
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | Tactic argument type         | parsed as                 | interpreted as                       | as in tactic   |
-   +==============================+===========================+======================================+================+
-   | ``ident``                    | identifier                | a user-given name                    | intro          |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``simple_intropattern``      | intro pattern             | an intro pattern                     | intros         |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``hyp``                      | identifier                | an hypothesis defined in context     | clear          |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``reference``                | qualified identifier      | a global reference of term           | unfold         |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``constr``                   | term                      | a term                               | exact          |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``uconstr``                  | term                      | an untyped term                      | refine         |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``integer``                  | integer                   | an integer                           |                |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``int_or_var``               | identifier or integer     | an integer                           | do             |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``tactic``                   | tactic at level 5         | a tactic                             |                |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``tacticn``                  | tactic at level n         | a tactic                             |                |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | *entry*\ ``_list``           | list of *entry*           | a list of how entry is interpreted   |                |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
-   | ``ne_``\ *entry*\ ``_list``  | non-empty list of *entry* | a list of how entry is interpreted   |                |
-   +------------------------------+---------------------------+--------------------------------------+----------------+
+        -
 
    .. note:: In order to be bound in tactic definitions, each syntactic
              entry for argument type must include the case of simple L tac

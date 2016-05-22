@@ -25,7 +25,10 @@ It's also easy to define special environments when needed:
 Interaction with CoqTop
 =======================
 
-Done using a new directive, ``.. coqtop::``. It takes arguments saying what to display (inputs, outputs, or both), whether to reset the environment (and optionally whether to undo the commands of that block), highlights the input with CoqDoc and the output by translating ANSI sequences produced by CoqTop.
+Done using a new directive, ``.. coqtop::``. It takes arguments saying what to
+display (inputs, outputs, or both), whether to reset the environment (and
+optionally whether to undo the commands of that block), highlights the input
+with CoqDoc and the output by translating ANSI sequences produced by CoqTop.
 
 .. coqtop:: reset
 
@@ -46,7 +49,8 @@ Done using a new directive, ``.. coqtop::``. It takes arguments saying what to d
 Grammars
 ========
 
-Sphinx has a construct for grammars, and it can cross-reference tokens between grammars, too (for example: :token:`curlies`). For example:
+Sphinx has a construct for grammars, and it can cross-reference tokens between
+grammars, too (:token:`curlies`). For example:
 
 Parsing rules
 -------------
