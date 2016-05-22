@@ -12,18 +12,18 @@
     white-space: pre-wrap;
 }
 
-.notation sup {
+.notation .notation-sup {
     top: -0.2em;
     line-height: 1em;
 }
 
-.notation sub {
+.notation .notation-sub {
     bottom: -0.2em;
     border-radius: 1rem;
     line-height: 0.4em; /* For commas */
 }
 
-.notation sup, .notation sub {
+.notation .notation-sup, .notation .notation-sub {
     background: #EAEAEA;
     border: 1px solid #AAA;
     color: black;
@@ -53,32 +53,26 @@
     margin-right: 0.4em; /* Space for the right half of the sub- and sup-scripts */
 }
 
-/* p .notation > .repeat-wrapper { /\* Only for top-level boxes, and only in paragraphs (not in ‘dd’) *\/ */
-/*     margin-top: 0.4em; */
-/*     margin-bottom: 0.4em; */
-/* } */
-
 .notation .hole {
     color: #4e9a06;
     font-style: italic;
 }
 
-/* We can't display nested blocks otherwise */
-code, .rst-content tt, .rst-content code {
-    background: transparent !important;
-    border: none !important;
-    font-size: inherit !important;
+/***********************/
+/* Small extra classes */
+/***********************/
+
+.math-preamble {
+    display: none;
 }
 
-code {
-    padding: 0 !important;      /* This padding doesn't make sense without a border */
+.inline-grammar-production {
+    font-weight: bold;
 }
 
-dt > .property {
-    margin-right: 0.25em;
-}
-
-/* Coqtop IO */
+/************************/
+/* Coqtop IO and Coqdoc */
+/************************/
 
 .coqtop dd, .ansi-bg-default {
     background: #2e3436 !important;
@@ -111,9 +105,13 @@ dt > .property {
     white-space: pre;
 }
 
-/* FIXME: Specific to the RTD theme */
-a:visited {
-    color: #2980B9;
+.coqtop dt, .coqtop dd {
+    border: none !important;
+    display: block !important;
+}
+
+.coqtop.coqtop-hidden, dd.coqtop-hidden, dt.coqtop-hidden { /* Overqualifying for precedence */
+    display: none !important;
 }
 
 /* FIXME: Specific to the RTD theme */
@@ -124,21 +122,28 @@ a:visited {
     white-space: pre;
 }
 
-.coqtop dt, .coqtop dd {
+/*************/
+/* Overrides */
+/*************/
+
+/* We can't display nested blocks otherwise */
+code, .rst-content tt, .rst-content code {
+    background: transparent !important;
     border: none !important;
-    display: block !important;
+    font-size: inherit !important;
 }
 
-.coqtop.coqtop-hidden, dd.coqtop-hidden, dt.coqtop-hidden { /* Overqualifying for precedence */
-    display: none !important;
+code {
+    padding: 0 !important;      /* This padding doesn't make sense without a border */
 }
 
-.math-preamble {
-    display: none;
+dt > .property {
+    margin-right: 0.25em;
 }
 
-.inline-grammar-production {
-    font-weight: bold;
+/* FIXME: Specific to the RTD theme */
+a:visited {
+    color: #2980B9;
 }
 
 /* Pygments for Coq is confused by ‘…’ */

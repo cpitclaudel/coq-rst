@@ -21,17 +21,18 @@ class TacticNotationsToSphinxVisitor(TacticNotationsVisitor):
         return aggregate
 
     def visitRepeat(self, ctx:TacticNotationsParser.RepeatContext):
+        # Uses inline nodes instead of subscript and superscript to ensure that
+        # we get the right customization hooks at the LaTeX level
         wrapper = nodes.inline('', '', classes=['repeat-wrapper'])
-
         wrapper += nodes.inline('', '', *self.visitChildren(ctx), classes=["repeat"])
 
         repeat_marker = ctx.LGROUP().getText()[1]
-        wrapper += nodes.superscript(repeat_marker, repeat_marker)
+        wrapper += nodes.inline(repeat_marker, repeat_marker, classes=['notation-sup'])
 
         separator = ctx.ATOM()
         if separator:
             sep = separator.getText()
-            wrapper += nodes.subscript(sep, sep)
+            wrapper += nodes.inline(sep, sep, classes=['notation-sub'])
 
         return [wrapper]
 

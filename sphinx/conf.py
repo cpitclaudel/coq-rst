@@ -222,19 +222,6 @@ htmlhelp_basename = 'Coq85doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    # https://www.topbug.net/blog/2015/12/10/a-collection-of-issues-about-the-latex-output-in-sphinx-and-the-solutions/
-    # Latex figure (float) alignment
-    #'figure_align': 'htbp',
-}
-
 ###########################
 # Set things up for XeTeX #
 ###########################
@@ -244,6 +231,10 @@ latex_elements = {
     'inputenc': '',
     'utf8extra': '',
     'cmappkg': '',
+    # https://www.topbug.net/blog/2015/12/10/a-collection-of-issues-about-the-latex-output-in-sphinx-and-the-solutions/
+    'papersize': 'letterpaper',
+    'classoptions': ',openany', # No blank pages
+    "preamble": r"\usepackage{coqnotations}"
 }
 
 from sphinx.builders.latex import LaTeXBuilder
@@ -254,7 +245,7 @@ LaTeXBuilder.usepackages.append(("unicode-math", []))
 # done #
 ########
 
-latex_additional_files = []
+latex_additional_files = ["_static/coqnotations.sty"]
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
