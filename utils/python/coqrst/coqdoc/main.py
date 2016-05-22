@@ -20,7 +20,7 @@ from bs4.element import NavigableString
 COQDOC_OPTIONS = ['--body-only', '--no-glob', '--no-index', '--no-externals',
                   '-s', '--html', '--stdout', '--utf8']
 
-COQDOC_SYMBOLS = ["->", "<-", "<->", "=>", "<=", ">=", "<>", "~", "/\\", "\\/", "|-", "*"]
+COQDOC_SYMBOLS = ["->", "<-", "<->", "=>", "<=", ">=", "<>", "~", "/\\", "\\/", "|-", "*", "forall", "exists"]
 COQDOC_HEADER = "".join("(** remove printing {} *)".format(s) for s in COQDOC_SYMBOLS)
 
 def coqdoc(coq_code, coqdoc_bin="coqdoc"):
