@@ -754,7 +754,10 @@ def simplify_source_code_blocks_for_latex(app, doctree, fromdocname): # pylint: 
         if is_html:
             node.rawsource = '' # Prevent pygments from kicking in
         else:
-            node.replace_self(nodes.literal_block(node.rawsource, node.rawsource, language="Coq"))
+            if 'coqtop-hidden' in node['classes']:
+                node.parent.remove(node)
+            else:
+                node.replace_self(nodes.literal_block(node.rawsource, node.rawsource, language="Coq"))
 
 def setup(app):
     """Register the Coq domain"""
