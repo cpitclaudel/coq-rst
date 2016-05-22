@@ -86,7 +86,7 @@ This includes:
 
 All the code used to build this website (and the `PDF manual
 <http://web.mit.edu/cpitcla/www/coq-rst/Coq85.pdf>`_) is on `GitHub
-<https://github.com/cpitclaudel/coq-rst>`.
+<https://github.com/cpitclaudel/coq-rst>`_.
 
 Three excerpts of Coq's manual, translated to *reStructuredText*.
 -----------------------------------------------------------------
