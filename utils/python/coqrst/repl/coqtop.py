@@ -6,7 +6,9 @@ This module is a simple pexpect-based driver for coqtop, based on the old
 REPL interface.
 """
 
+import os
 import re
+
 import pexpect
 
 class CoqTop:
@@ -22,15 +24,15 @@ class CoqTop:
 
     COQTOP_PROMPT = re.compile("\r\n[^< ]+ < ")
 
-    def __init__(self, coqtop_bin="coqtop", color=False, args=None) -> str:
+    def __init__(self, coqtop_bin=None, color=False, args=None) -> str:
         """Configure a coqtop instance (but don't start it yet).
 
-        :param coqtop_bin: The path to coqtop
+        :param coqtop_bin: The path to coqtop; uses $COQBIN by default, falling back to "coqtop"
         :param color:      When True, tell coqtop to produce ANSI color codes (see
                            the ansicolors module)
         :param args:       Additional arugments to coqtop.
         """
-        self.coqtop_bin = coqtop_bin
+        self.coqtop_bin = coqtop_bin or os.getenv('COQBIN') or "coqtop"
         self.args = (args or []) + ["-color", "on"] * color
         self.coqtop = None
 

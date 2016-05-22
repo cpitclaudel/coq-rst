@@ -492,8 +492,7 @@ class CoqtopBlocksTransform(Transform):
         """Add coqtop's responses to a Sphinx AST
 
         Finds nodes to process using is_coqtop_block."""
-        # FIXME use a more generic setting for COQTOP_BIN
-        with CoqTop(coqtop_bin="/build/coq-8.5/bin/coqtop", color=True) as repl:
+        with CoqTop(color=True) as repl:
             for node in self.document.traverse(CoqtopBlocksTransform.is_coqtop_block):
                 options = node['coqtop_options']
                 opt_undo, opt_reset, opt_input, opt_output = self.parse_options(options)
