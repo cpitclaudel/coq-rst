@@ -369,7 +369,7 @@ class InferenceDirective(Directive):
     def prepare_latex(self, content):
         parts = re.split('^ *----+ *$', content, flags=re.MULTILINE)
         if len(parts) != 2:
-            raise self.error('Expected two parts in inference::, separated by a rule (----).')
+            raise self.error('Expected two parts in ‘inference’ directive, separated by a rule (----).')
 
         top, bottom = tuple(InferenceDirective.prepare_latex_operand(p) for p in parts)
         return "%\n".join(("\\frac{", top, "}{", bottom, "}"))
@@ -385,11 +385,9 @@ class InferenceDirective(Directive):
         target = nodes.target('', '', ids=['inference-' + tid])
         self.state.document.note_explicit_target(target)
 
-        dli = nodes.definition_list_item()
-        dli += target
-        dli += nodes.term('', title)
-        dli += nodes.description('', math_node)
-        dl = nodes.definition_list(content, dli)
+        term, desc = nodes.term('', title), nodes.description('', math_node)
+        dli = nodes.definition_list_item('', term, desc)
+        dl = nodes.definition_list(content, target, dli)
         set_source_info(self, dl)
         return [dl]
 
@@ -606,11 +604,13 @@ def GrammarProductionRole(typ, rawtext, text, lineno, inliner, options={}, conte
     """
     #pylint: disable=dangerous-default-value, unused-argument
     env = inliner.document.settings.env
-    idname = 'grammar-token-{}'.format(text)
-    node = nodes.literal(rawtext, text, role=typ.lower(), classes=['inline-grammar-production'], ids=[idname])
+    targetid = 'grammar-token-{}'.format(text)
+    target = nodes.target('', '', ids=[targetid])
+    inliner.document.note_explicit_target(target)
+    code = nodes.literal(rawtext, text, role=typ.lower())
+    node = nodes.inline(rawtext, '', target, code, classes=['inline-grammar-production'])
     set_role_source_info(inliner, lineno, node)
-    inliner.document.note_implicit_target(node, node)
-    env.domaindata['std']['objects']['token', text] = env.docname, idname
+    env.domaindata['std']['objects']['token', text] = env.docname, targetid
     return [node], []
 
 class CoqDomain(Domain):

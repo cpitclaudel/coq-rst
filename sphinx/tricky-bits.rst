@@ -69,12 +69,12 @@ Lexing rules
 ------------
 
 .. productionlist:: example
-   LGROUP     : '{' [+*?]
-   LBRACE     : '{'
-   RBRACE     : '}'
+   LGROUP     : { [+*?]
+   LBRACE     : {
+   RBRACE     : }
    ATOM       : ~[@{} ]+
-   ID         : '@' [a-zA-Z0-9_]+
-   WHITESPACE : ' '+
+   ID         : @ [a-zA-Z0-9_]+
+   WHITESPACE : ( )+
 
 
 Tables

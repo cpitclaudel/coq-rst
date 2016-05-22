@@ -529,7 +529,7 @@ The different syntactic variants of the command Notation are given on the
 following figure. The optional :token:`scope` is described in the Section 12.2.
 
 .. productionlist:: coq
-   sentence      : [Local] Notation `string` := `term` [`modifiers`] [: `scope`].
+   notation      : [Local] Notation `string` := `term` [`modifiers`] [: `scope`].
                  : | [Local] Infix `string` := `qualid` [`modifiers`] [: `scope`].
                  : | [Local] Reserved Notation `string` [`modifiers`] .
                  : | Inductive `ind_body` [`decl_notation`] with … with `ind_body` [`decl_notation`].
@@ -981,7 +981,7 @@ Tactic notations allow to customize the syntax of the tactics of the
 tactic language [#tacn]_. Tactic notations obey the following syntax:
 
 .. productionlist:: coq
-   sentence             : [Local] Tactic Notation [`tactic_level`] [`prod_item` … `prod_item`] := `tactic`.
+   tacn                 : [Local] Tactic Notation [`tactic_level`] [`prod_item` … `prod_item`] := `tactic`.
    prod_item            : `string` | `tactic_argument_type`(`ident`)
    tactic_level         : (at level `natural`)
    tactic_argument_type : ident | simple_intropattern | reference
