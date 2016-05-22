@@ -1,5 +1,5 @@
 ==================================================
- Example 3: Extended pattern-matching (full text)
+ Extended pattern-matching (full text)
 ==================================================
 
 :Source: https://coq.inria.fr/distrib/current/refman/Reference-Manual020.html

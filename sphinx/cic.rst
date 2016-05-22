@@ -1,5 +1,5 @@
 ==================================
-Example 2: Typing rules of the CIC
+ Typing rules of the CIC
 ==================================
 
 :Source: https://coq.inria.fr/refman/Reference-Manual006.html#Typing-rules

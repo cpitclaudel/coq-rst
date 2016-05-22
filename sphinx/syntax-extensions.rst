@@ -1,5 +1,5 @@
 ========================================================
- Example 5: Syntax extensions and interpretation scopes
+ Syntax extensions and interpretation scopes
 ========================================================
 
 :Source: https://coq.inria.fr/refman/Reference-Manual014.html

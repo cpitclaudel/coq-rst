@@ -164,7 +164,7 @@ Welcome to a tiny subset of Coq's documentation!
 ================================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 10
 
    tactics
    cic

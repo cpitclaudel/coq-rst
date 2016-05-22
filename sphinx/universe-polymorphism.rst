@@ -1,5 +1,5 @@
 ==================================
- Example 4: Polymorphic Universes
+ Polymorphic Universes
 ==================================
 
 :Author: Matthieu Sozeau

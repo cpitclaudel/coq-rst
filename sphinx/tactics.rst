@@ -1,5 +1,5 @@
 =============================================
-Example 1: A subset of Coq's tactic reference
+ A subset of Coq's tactic reference
 =============================================
 
 :Source: https://coq.inria.fr/refman/Reference-Manual010.html.
